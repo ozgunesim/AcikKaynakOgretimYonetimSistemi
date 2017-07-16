@@ -1,10 +1,14 @@
 <?php
+/*
+bu dokumandaki kodlar tarafıma (özgün eşim) aittir. izinsiz kullanılamaz!
+ozgunesim@gmail.com
+http://inoverse.com
+*/
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 Class Auth{
-	$CI = null;
+	var $CI = null;
 	function __construct(){
 		$this->CI =& get_instance();
-		$this->CI->load->session();
 	}
 
 	public function check_auth($allowed = array()){
@@ -20,7 +24,7 @@ Class Auth{
 
 	public function check_session(){
 		//bu alanda oturum kontrolu yapiliyor
-		return isset( $this->CI->session->userdata('user') );
+		return $this->CI->session->userdata('user') !== null;
 	}
 
 }
