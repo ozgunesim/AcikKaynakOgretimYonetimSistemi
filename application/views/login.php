@@ -9,13 +9,14 @@
 					<h3 class="panel-title">Lütfen Giriş Yapın</h3>
 				</div>
 				<div class="panel-body">
-					<form role="form">
+					<?php $this->load->view('messages'); ?>
+					<form role="form" action="" method="post">
 						<fieldset>
 							<div class="form-group">
-								<input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
+								<input class="form-control" placeholder="E-mail" required name="email" type="email" autofocus>
 							</div>
 							<div class="form-group">
-								<input class="form-control" placeholder="Şifre" name="password" type="password" value="">
+								<input class="form-control" placeholder="Şifre" required name="password" type="password" value="">
 							</div>
 							<!--div class="checkbox">
 								<label>
@@ -28,7 +29,7 @@
 
 							<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
 							<!-- Change this to a button or input when using this as a form -->
-							<a href="index.html" class="btn btn-success btn-block">Giriş Yap</a>
+							<button href="index.html" class="btn btn-success btn-block">Giriş Yap</button>
 						</fieldset>
 					</form>
 				</div>
@@ -37,8 +38,6 @@
 	</div>
 </div>
 
-
-<?php $this->load->view('messages'); ?>
 <form action="" method="post">
 
 

@@ -13,13 +13,16 @@ class MtkMailer{
 		$CI->load->config('mtk_mail');
 		$mail = new PHPMailer();
 		$mail->IsSMTP();
-		$mail->SMTPDebug = 4;
-		$mail->Host = $CI->config->item('host');
-		$mail->Port = $CI->config->item('port');
+		$mail->Mailer = 'smtp';
+		$mail->SMTPAuth = true;
+		$mail->Host = $CI->config->item('host'); 
+		$mail->Port = 465;
 		$mail->SMTPSecure = 'ssl';
+
 		$mail->Username = $CI->config->item('username');
 		$mail->Password = $CI->config->item('password');
 		//$mail->From = "ozgunesim@gmail.com";
+		
 		$mail->FromName = "MKT473";
 		$mail->isHTML(true);
 
@@ -29,11 +32,11 @@ class MtkMailer{
 		$mail->Subject = 'MTK473 Bilgi Maili';
 		$mail->MsgHTML($content);
 		if($mail->Send()) {
-		    return true;
+			return true;
 		} else {
 		    // bir sorun var, sorunu ekrana bastıralım
 		    //echo $mail->ErrorInfo;
-		    return false;
+			return false;
 		}
 	}
 }

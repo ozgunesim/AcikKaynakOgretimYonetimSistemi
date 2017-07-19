@@ -10,12 +10,15 @@ Class Admin extends CI_Controller{
 		}*/
 	}
 
-	public function excel(){
+	public function add_student(){
 		//excel tablosundan gelen verilen bu alanda parse edilip veritabanina eklenecek
 		//$this->load->view('admin/excel');
-		$data = array();
+		$this->load->model('departments_model');
+		$data = array(
+			'departments' => $this->departments_model->GetDepartments()
+			);
 
-		if($this->input->post('upload_submit')){
+		if(isset($_FILES['excel_file'])){		//dosya secilmis. parse edilip kullaniciya gosterilecek
 			$config['upload_path']    = './temp_upload/';
 			$config['allowed_types']  = '*';
 			$config['max_size']       = 10240;
@@ -35,7 +38,6 @@ Class Admin extends CI_Controller{
 
 			$this->load->library('upload', $config);
 			$this->load->helper('messages');
-        //excel_file
 
 			if ( ! $this->upload->do_upload('excel_file'))
 			{
@@ -53,23 +55,72 @@ Class Admin extends CI_Controller{
 					set_error_msg('Desteklenmeyen dosya biçimi!');
 
 			}
+		}else if($this->input->post('table_json') != null){		//ogrenciler dosyadan yukleniyor
+			$this->load->model('user_model');
+			$this->load->helper('messages');
+			//exit('gelen:' . var_dump($this->input->post('table_json')));
+			$result = $this->user_model->AddUserList(json_decode($this->input->post('table_json')), 3);
+			//exit('son');
+			if($result === true){
+				set_success_msg('Kayıtlar eklendi!');
+			}else{
+				set_error_msg($result);
+			}
+		}else if($this->input->post('manuel_email') != null){		//ogrenci bilgileri el ile girildi
+			$this->load->model('user_model');
+			$this->load->helper('messages');
+			$user = new stdClass();
+			$user->name = trim($this->input->post('manuel_name'));
+			$user->email = trim($this->input->post('manuel_email'));
+			$user->department = trim($this->input->post('manuel_department'));
+			$user->number = trim($this->input->post('manuel_number'));
+
+			if(
+				strlen($user->number) == 8 &&
+				is_numeric($user->number) &&
+				filter_var($user->email, FILTER_VALIDATE_EMAIL) &&
+				is_numeric($user->number)
+				/*kullanıcıdan gelen verinin iceriginin gecerliligi kontrol ediliyor */)
+			{
+				$result = $this->user_model->AddUser($user,3);
+				if($result === true){
+					set_success_msg('Öğrenci eklendi!');
+				}else{
+					set_error_msg($result);
+				}
+			}else{
+				set_error_msg('girilen bilgilerde hata var!');
+			}
+
+
+
 		}
 
-		$this->load->view('admin/excel', $data);
-		
+		$this->load->view('admin/add_student', $data);
+
 
 
 	}
 
 	public function mail(){
+		//MAIL GONDERMEK ICIN PHP OPENSSL EKLENTISI AKTIF OLMALIDIR! -> PHP.INI
 		if($this->input->post('mail-target') != null){
 			$this->load->library('MtkMailer');
 			$mail = new MtkMailer();
 			$isSent = $mail->sendMail(
-				/*$this->input->post('mail-target')*/'ozgunesim@gmail.com',
+				/*$this->input->post('mail-target')*/
+				'ozgunesim@gmail.com',
 				$this->input->post('mail-content')
-			);
-			exit($isSent);
+				);
+
+			$this->load->helper('messages');
+			if($isSent === true){
+				set_success_msg('Mail başarıyla gönderildi.');
+			}else{
+				set_error_msg('Mail gönderilirken hata oluştu!');
+			}
+
+			//$this->load->view('falanfilan');
 
 		}else{
 			exit('hata!');

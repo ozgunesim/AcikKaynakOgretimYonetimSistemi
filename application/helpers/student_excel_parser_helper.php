@@ -28,8 +28,8 @@ function parseStudentExcel($fullPath){
 				try{
 					$student = new stdClass();
 					$student->index = $tempArray[0];
-					$student->failure = $tempArray[1];
-					$student->num = $tempArray[2];
+					$student->number = $tempArray[1];
+					$student->failure = $tempArray[2];
 					$student->surname = $tempArray[3];
 					$student->name = $tempArray[4];
 					$student->department = $tempArray[5];
