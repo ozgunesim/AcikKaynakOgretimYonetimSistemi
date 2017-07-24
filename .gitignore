@@ -57,6 +57,7 @@ $RECYCLE.BIN/
 client_secrets.json
 servio_service_account.json
 mtk_mail.php
+temp_upload/*
 
 # Windows shortcuts
 *.lnk
