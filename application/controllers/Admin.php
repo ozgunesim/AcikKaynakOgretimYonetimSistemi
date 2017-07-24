@@ -89,7 +89,7 @@ Class Admin extends CI_Controller{
 					set_error_msg($result);
 				}
 			}else{
-				set_error_msg('girilen bilgilerde hata var!');
+				set_error_msg('Girilen bilgilerde hata var!');
 			}
 
 
@@ -100,6 +100,14 @@ Class Admin extends CI_Controller{
 
 
 
+	}
+
+
+	public function delete_student(){
+		$data = array();
+		$this->load->model('departments_model');
+		$data['departments'] = $this->departments_model->GetDepartments();
+		$this->load->view('admin/delete_student', $data);
 	}
 
 	public function mail(){

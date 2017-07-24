@@ -5,6 +5,7 @@ Class User_model extends CI_Model{
 		if(!defined('_OK')) define("_OK", "_OK");
 		if(!defined('_EMPTY')) define("_EMPTY", "_EMPTY");
 		$this->load->database();
+		$this->load->helper('special_insert');
 	}
 
 	public function GetUser($email = "", $pw = ""){
@@ -57,7 +58,8 @@ Class User_model extends CI_Model{
 			'isActive' => 0
 			);
 
-		if($this->db->insert('users',$insertArray)){
+		$inserted = special_insert('users',$insertArray);
+		if($inserted === true){
 			$id = $this->db->insert_id();
 			if($auth == 2){
 				$dep = $this->getDeptID($departments, $u->department);
@@ -69,8 +71,9 @@ Class User_model extends CI_Model{
 					'honour' => $u->honour,
 					'department' => $dep
 					);
-				$this->db->insert('teacher_info', $infoArray);
-				return true;
+				//$this->db->insert('teacher_info', $infoArray);
+				return special_insert('teacher_info', $infoArray);
+				//return true;
 			}else if($auth == 3){
 				$dep = $this->getDeptID($departments, $u->department);
 				if($dep == null)
@@ -80,19 +83,20 @@ Class User_model extends CI_Model{
 					'number' => $u->number,
 					'department' => $dep
 					);
-				$this->db->insert('student_info', $infoArray);
-				return true;
+				//$this->db->insert('student_info', $infoArray);
+				return special_insert('student_info', $infoArray);
+				//return true;
 			}else{
 				return('auth hatası');
 			}
 		}else{
-			return('user insert hatası');
+			return($inserted);
 		}
 	}
 
 
-	public function AddUser($user = "", $auth){
-		if(!empty($user)){
+	public function AddUser($user = "", $auth = -1){
+		if(!empty($user) && $auth != -1){
 			$departments = $this->db->select('*')->from('departments')->get()->result_array();
 			return $this->addOneUser($user, $auth, $departments);
 		}else{

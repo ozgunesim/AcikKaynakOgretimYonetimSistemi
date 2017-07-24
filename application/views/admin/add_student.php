@@ -37,6 +37,7 @@ $this->load->view('messages');
 					?>
 				</select>
 			</label>
+			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
 			<button class="btn btn-primary pull-right">Kaydet</button>
 			<div class="clearfix"></div>
 			<br>
@@ -56,6 +57,7 @@ $this->load->view('messages');
 					</button>
 				</div>
 			</label>
+			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
 		</form><br>
 
 		<?php
@@ -69,6 +71,7 @@ $this->load->view('messages');
 						<div class="alert alert-warning">
 							Öğrenciler bölüm kodlarına göre kaydedilecektir. Kayıt sonrası öğrencilerin mail adreslerine aktivasyon maili gönderilecektir. Mailinde yer alan linke tıklayan kullanıcılar sisteme giriş yapabilirler.
 
+							<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
 
 							<div class="clearfix"></div>
 							<div class="pull-right">
@@ -146,6 +149,7 @@ function printCell($str){
 						<textarea name="mail-content" id="mail-content" class="form-control" autofocus rows=10></textarea>
 					</Label>
 				</div>
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
 					<button class="btn btn-primary">Mail Gönder</button>

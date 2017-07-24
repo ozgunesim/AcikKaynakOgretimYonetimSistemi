@@ -23,6 +23,17 @@ Class Student_model extends CI_Model{
 			return _EMPTY;
 		}
 	}
+
+	public function GetStudentCount(){
+		$query = $this->db->select('count(*) as total')->from('users')->where('user_auth', 3)->get();
+		return $query->row()->total;
+	}
+
+	public function GetStudentPage(){
+		$this->load->config('pagination');
+		$limit = $this->config->item('pagination_limit');
+		
+	}
 	
 }
 ?>
