@@ -1,5 +1,5 @@
 <?php $this->load->view('static/header');?>
-<h2>Sisteme Öğrenci Ekle</h2>
+<h2 class="page-title">Sisteme Öğrenci Ekle</h2>
 <div class="alert alert-info">
 	Bu bölümde öğrenci listelerini doğrudan excel tablosu ile yükleyebilirsiniz. Ayrıca kendiniz de yeni kayıt ekleyebilirsiniz.
 </div>

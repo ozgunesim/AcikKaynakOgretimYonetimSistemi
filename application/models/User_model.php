@@ -125,6 +125,34 @@ Class User_model extends CI_Model{
 			return _EMPTY;
 		}
 	}
+
+	public function BanUser($user_id = -1){
+		if($user_id != -1){
+			$data = array(
+			'isActive' => '0'
+			);
+			$this->db->where('user_id', $user_id);
+			$this->db->update('users', $data);
+			return true;
+		}else{
+			return _EMPTY;
+		}
+		
+	}
+
+	public function ActivateUser($user_id = -1){
+		if($user_id != -1){
+			$data = array(
+			'isActive' => '1'
+			);
+			$this->db->where('user_id', $user_id);
+			$this->db->update('users', $data);
+			return true;
+		}else{
+			return _EMPTY;
+		}
+		
+	}
 	
 }
 ?>

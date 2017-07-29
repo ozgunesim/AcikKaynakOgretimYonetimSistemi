@@ -34,6 +34,49 @@ Class Student_model extends CI_Model{
 		$limit = $this->config->item('pagination_limit');
 		
 	}
+
+	public function SearchStudent($params = array(), $page=-1){
+		if(!empty($params) && $page != -1){
+
+			if(isset($params['dept'])){
+				$this->load->model('departments_model');
+				$dept = $this->departments_model->GetDepartmentByCode($params['dept']);
+			}
+
+			$this->load->config('pagination');
+			$limit = $this->config->item('pagination_limit');
+			$this->db->select('users.*, student_info.*, auths.*, departments.*')
+			->from('users')
+			->join('student_info', 'users.user_id = student_info.s_user_id', 'inner')
+			->join('auths', 'users.user_auth = auths.auth_id', 'inner')
+			->join('departments', 'departments.department_id = student_info.department', 'inner');
+
+			if(isset($params['name'])){
+				$this->db->like('users.user_name', $params['name']);
+			}
+
+			if(isset($params['number'])){
+				$this->db->like('student_info.number', $params['number']);
+			}
+
+			if(isset($params['email'])){
+				$this->db->like('users.user_mail', $params['email']);
+			}
+
+			if(isset($params['dept'])){
+				$this->db->like('student_info.department', $dept->department_id);
+			}
+
+			$db2 = clone $this->db;
+			$result['all_count'] = $db2->get()->num_rows();
+			$result['limited'] = $this->db->limit($limit, ($page-1) * $limit)->get()->result();
+			
+			return $result;
+
+		}else{
+			return _EMPTY;
+		}
+	}
 	
 }
 ?>

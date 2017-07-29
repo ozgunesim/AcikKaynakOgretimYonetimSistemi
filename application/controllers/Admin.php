@@ -103,10 +103,74 @@ Class Admin extends CI_Controller{
 	}
 
 
-	public function delete_student(){
+	public function delete_student($page = 1){
 		$data = array();
 		$this->load->model('departments_model');
 		$data['departments'] = $this->departments_model->GetDepartments();
+
+		if($this->input->post('delete_id') != null){
+			$this->load->helper('messages');
+			$this->load->model('user_model');
+			$result = $this->user_model->BanUser($this->security->xss_clean($this->input->post('delete_id')));
+			if($result === true){
+				set_success_msg('Kullanıcı başarıyla sistemden kaldırıldı.');
+			}else{
+				set_error_msg('Beklenmeyen hata!');
+			}
+		}else if($this->input->post('activate_id') != null){
+			$this->load->helper('messages');
+			$this->load->model('user_model');
+			$result = $this->user_model->ActivateUser($this->security->xss_clean($this->input->post('activate_id')));
+			if($result === true){
+				set_success_msg('Kullanıcı başarıyla aktifleştirildi.');
+			}else{
+				set_error_msg('Beklenmeyen hata!');
+			}
+		}else{
+			$search = array();
+
+			$newSearch = ($this->input->post('search_btn') != null);
+			if($this->input->post('student_name') != null){
+				$search['name'] = trim($this->input->post('student_name'));
+				$data['name'] = $search['name'];
+			}
+			if($this->input->post('student_num') != null){
+				$search['number'] = trim($this->input->post('student_num'));
+				$data['number'] = $search['number'];
+			}
+			if($this->input->post('student_dept') != null){
+				$search['dept'] = trim($this->input->post('student_dept'));
+				$data['dept'] = $search['dept'];
+			}
+			if($this->input->post('student_email') != null){
+				$search['email'] = trim($this->input->post('student_email'));
+				$data['email'] = $search['email'];
+			}
+
+			if(isset($_SESSION['last_search']) && !$newSearch)
+				$search = $this->session->userdata('last_search');
+			else if($newSearch === true)
+				$page = 1;
+
+
+			$this->session->set_userdata('last_search', $search);
+
+			//exit(var_dump($search));
+
+			if(!empty($search)){
+				$this->load->model('student_model');
+				$result = $this->student_model->SearchStudent($search, $page);
+				//exit("page:" . $page);
+				$data['search_result'] = $result['limited'];
+				$data['all_count'] = $result['all_count'];
+
+				$config['base_url'] = site_url() . '/admin/delete_student/';
+				$config['total_rows'] = $data['all_count'];
+				$this->load->library('defaultpagination');
+				$data['pagination'] = $this->defaultpagination->create_links($config);
+			}
+		}
+
 		$this->load->view('admin/delete_student', $data);
 	}
 
