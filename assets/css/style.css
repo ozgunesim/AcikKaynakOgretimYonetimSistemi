@@ -99,6 +99,10 @@ body > .container-fluid{
   height: auto;
   color: #e1ffff;
 }
+.nav-side-menu a{
+  color: #e1ffff;
+  text-decoration: none;
+}
 .nav-side-menu .brand {
   background-color: #222;
   line-height: 50px;
@@ -234,3 +238,10 @@ body {
 
 
 /* SIDE MENU SONU */
+
+.legal-notice{
+	margin: 15px;
+  border: 1px dashed #48535f;
+  padding: 5px;
+  border-radius: 4px;
+}

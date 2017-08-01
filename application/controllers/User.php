@@ -53,6 +53,10 @@ Class User extends CI_Controller{
 		//sifre, email degisikligi gibi kisisel ayarlar bu alanda yapilacak
 	}
 
+	public function activation($key){
+		
+	}
+
 	
 
 }

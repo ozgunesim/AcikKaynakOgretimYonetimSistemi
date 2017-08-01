@@ -69,8 +69,8 @@
         <a href="#"><i class="fa fa-graduation-cap fa-lg"></i> Öğretmenler <span class="arrow"></span></a>
       </li>  
       <ul class="sub-menu collapse" id="service">
-        <li>Öğretmen Ekle</li>
-        <li>Erişim Ayarları</li>
+        <a href="<?php echo site_url() . '/admin/add_teacher'?>"><li>Öğretmen Ekle</li></a>
+        <a href="<?php echo site_url() . '/admin/delete_teacher'?>"><li>Erişim Ayarları</li></a>
       </ul>
 
 
@@ -78,8 +78,8 @@
         <a href="#"><i class="fa fa-child fa-lg"></i> Öğrenciler <span class="arrow"></span></a>
       </li>
       <ul class="sub-menu collapse" id="new">
-        <li>Öğrenci Ekle</li>
-        <li>Erişim Ayarları</li>
+        <a href="<?php echo site_url() . '/admin/add_student'?>"><li>Öğrenci Ekle</li></a>
+        <a href="<?php echo site_url() . '/admin/delete_student'?>"><li>Erişim Ayarları</li></a>
       </ul>
 
 
@@ -151,7 +151,7 @@
 
         </ul-->
 
-        <footer style="margin-top: 15px;" class="hidden-sm hidden-xs"><h6 class="text-center" style="padding: 15px;"><small>Copyright <?php echo date('Y'); ?> | Developed by Özgün EŞİM<br>Bu proje akademik amaçlar da dahil olmak üzere hiçbir şekilde izinsiz kullanılamaz. Bu siteyi görüntüleyen herkes lisans sözleşmesini kabul etmiş sayılır. <a href="<?php echo base_url(); ?>license.txt">Lisans Sözleşmesi</a></small></h6></footer>
+        <footer class="hidden-sm hidden-xs legal-notice"><h6 class="text-center"><small>Copyright <?php echo date('Y'); ?> | Developed by Özgün EŞİM<br>Bu proje akademik amaçlar da dahil olmak üzere hiçbir şekilde izinsiz kullanılamaz. Bu siteyi görüntüleyen herkes lisans sözleşmesini kabul etmiş sayılır. <a href="<?php echo base_url(); ?>license.txt">Lisans Sözleşmesi</a><br>İletişim: <a href="mailto:ozgunesim@gmail.com">ozgunesim@gmail.com</a></small></h6></footer>
 
 
 

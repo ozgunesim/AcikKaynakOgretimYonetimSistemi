@@ -32,7 +32,10 @@ Class DefaultPagination{
 		$config['first_tag_close'] = "</li>";
 		$config['last_tag_open'] = "<li>";
 		$config['last_tag_close'] = "</li>";
-
+		$config['last_link'] = 'Son';
+		$config['first_link'] = 'İlk';
+		$config['next_link'] = '<i class="fa fa-chevron-right"></i>';
+		$config['prev_link'] = '<i class="fa fa-chevron-left"></i>';
 		$this->CI->pagination->initialize($config);
 		return $this->CI->pagination->create_links();
 

@@ -143,14 +143,17 @@
 				</div>
 			</div>
 		</div>
+
+
+		<!--input type="hidden" style="display: none;" name="page" value="1" /-->
+		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
+		
 		<div class="row">
 			<div class="col-md-offset-4 col-md-4">
 				<div class="col-md-12 text-center text-info">Boş bıraktığınız alanlar aramaya dahil edilmez.</div>
 				<button type="submit" name="search_btn" value="1" class="btn btn-primary btn-block"><i class="fa fa-search"></i> Ara</button><br>
 			</div><br>
 		</div>
-		<!--input type="hidden" style="display: none;" name="page" value="1" /-->
-		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
 	</form>
 
 

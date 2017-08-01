@@ -67,7 +67,7 @@ Class User_model extends CI_Model{
 					return "bölüm hatası";
 				$infoArray = array(
 					't_user_id' => $id,
-					'biography' => $u->biography,
+					'biography' => $u->bio,
 					'honour' => $u->honour,
 					'department' => $dep
 					);
