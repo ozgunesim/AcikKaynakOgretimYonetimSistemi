@@ -58,12 +58,14 @@ body > .container-fluid{
 	font-size: 20px;
 	margin-left: -15px;
 	margin-right: -15px;
-	background: #fff;
+	background: #4f5b69;
 	padding-top: 15px;
 	padding-bottom: 15px;
 	margin-top: 0px;
 	padding-left: 15px;
-	box-shadow: 0 0 7px #949494;
+	/*box-shadow: 0 0 7px #949494;*/
+  color: #fff;
+  border-bottom: 1px solid #222;
 }
 .tab-pane{
 	padding-top: 15px;

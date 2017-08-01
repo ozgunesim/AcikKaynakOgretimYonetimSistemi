@@ -21,7 +21,7 @@
 	}
 	if(isset($search_result)){
 		?>
-		<h4 style="text-align: right;">Bulunan Sonuç Sayısı: <span class="badge"><?php echo $all_count; ?></span></h4>
+		<h4 style="text-align: right;">Bulunan Sonuç Sayısı: <span class="badge"><?php echo $all_count; ?></span> - <button id="new-search" class="btn btn-warning">Sonuçları Temizle</button></h4>
 		<div class="row">
 			<div class="col-md-12">
 				<table class="table table-condensed table-hover table-striped">
@@ -147,7 +147,7 @@
 
 		<!--input type="hidden" style="display: none;" name="page" value="1" /-->
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
-		
+
 		<div class="row">
 			<div class="col-md-offset-4 col-md-4">
 				<div class="col-md-12 text-center text-info">Boş bıraktığınız alanlar aramaya dahil edilmez.</div>
@@ -176,6 +176,13 @@
 		});
 		$('.clear-email').click(function(){
 			$('input[name=student_email]').val('');
+		});
+		$('#new-search').click(function(){
+			$('select option').eq(0).prop('selected', true);
+			var csrf = $('input[name=<?php echo $this->security->get_csrf_token_name(); ?>').val();
+			$('input').val('');
+			$('input[name=<?php echo $this->security->get_csrf_token_name(); ?>').val(csrf);
+			$('button[name=search_btn]').click();
 		});
 	});
 </script>

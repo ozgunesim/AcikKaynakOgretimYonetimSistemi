@@ -6,6 +6,7 @@ Class Admin extends CI_Controller{
 		parent::__construct();
 		$this->load->library('session');
 		$this->load->helper('xss_helper');
+		$this->load->helper('messages');
 		/*if($this->auth->check_auth( array(1) ) !== true){
 			exit('Yetkiniz Yok!');
 		}*/
@@ -38,7 +39,6 @@ Class Admin extends CI_Controller{
 			*/
 
 			$this->load->library('upload', $config);
-			$this->load->helper('messages');
 
 			if ( ! $this->upload->do_upload('excel_file'))
 			{
@@ -58,7 +58,6 @@ Class Admin extends CI_Controller{
 			}
 		}else if($this->input->post('table_json') != null){		//ogrenciler dosyadan yukleniyor
 			$this->load->model('user_model');
-			$this->load->helper('messages');
 			//exit('gelen:' . var_dump($this->input->post('table_json')));
 			$result = $this->user_model->AddUserList(json_decode($this->input->post('table_json')), 3);
 			//exit('son');
@@ -68,7 +67,6 @@ Class Admin extends CI_Controller{
 				set_error_msg($result);
 			}
 		}else if($this->input->post('manuel_email') != null){		//ogrenci bilgileri el ile girildi
-			$this->load->helper('messages');
 			if(xss_check()){
 				$this->load->model('user_model');
 				$user = new stdClass();
@@ -113,7 +111,6 @@ Class Admin extends CI_Controller{
 		$data['departments'] = $this->departments_model->GetDepartments();
 
 		if($this->input->post('delete_id') != null){
-			$this->load->helper('messages');
 			$this->load->model('user_model');
 			$result = $this->user_model->BanUser($this->security->xss_clean($this->input->post('delete_id')));
 			if($result === true){
@@ -122,7 +119,6 @@ Class Admin extends CI_Controller{
 				set_error_msg('Beklenmeyen hata!');
 			}
 		}else if($this->input->post('activate_id') != null){
-			$this->load->helper('messages');
 			$this->load->model('user_model');
 			$result = $this->user_model->ActivateUser($this->security->xss_clean($this->input->post('activate_id')));
 			if($result === true){
@@ -151,13 +147,13 @@ Class Admin extends CI_Controller{
 				$data['email'] = $search['email'];
 			}
 
-			if(isset($_SESSION['last_search']) && !$newSearch)
-				$search = $this->session->userdata('last_search');
+			if(isset($_SESSION['last_student_search']) && !$newSearch)
+				$search = $this->session->userdata('last_student_search');
 			else if($newSearch === true)
 				$page = 1;
 
 
-			$this->session->set_userdata('last_search', $search);
+			$this->session->set_userdata('last_student_search', $search);
 
 			//exit(var_dump($search));
 
@@ -189,7 +185,6 @@ Class Admin extends CI_Controller{
 				$this->input->post('mail-content')
 				);
 
-			$this->load->helper('messages');
 			if($isSent === true){
 				set_success_msg('Mail başarıyla gönderildi.');
 			}else{
@@ -209,7 +204,6 @@ Class Admin extends CI_Controller{
 		$data['honours'] = $this->honour_model->GetHonours();
 		$this->load->model('departments_model');
 		$data['departments'] = $this->departments_model->GetDepartments();
-		$this->load->helper('messages');
 
 		if($this->input->post('email') != null){
 			if(xss_check()){
@@ -254,7 +248,6 @@ Class Admin extends CI_Controller{
 		$data['honours'] = $this->honour_model->GetHonours();
 
 		if($this->input->post('delete_id') != null){
-			$this->load->helper('messages');
 			$this->load->model('user_model');
 			$result = $this->user_model->BanUser($this->security->xss_clean($this->input->post('delete_id')));
 			if($result === true){
@@ -263,7 +256,6 @@ Class Admin extends CI_Controller{
 				set_error_msg('Beklenmeyen hata!');
 			}
 		}else if($this->input->post('activate_id') != null){
-			$this->load->helper('messages');
 			$this->load->model('user_model');
 			$result = $this->user_model->ActivateUser($this->security->xss_clean($this->input->post('activate_id')));
 			if($result === true){
@@ -292,13 +284,13 @@ Class Admin extends CI_Controller{
 				$data['email'] = $search['email'];
 			}
 
-			if(isset($_SESSION['last_search']) && !$newSearch)
-				$search = $this->session->userdata('last_search');
+			if(isset($_SESSION['last_teacher_search']) && !$newSearch)
+				$search = $this->session->userdata('last_teacher_search');
 			else if($newSearch === true)
 				$page = 1;
 
 
-			$this->session->set_userdata('last_search', $search);
+			$this->session->set_userdata('last_teacher_search', $search);
 
 			//exit(var_dump($search));
 
@@ -320,9 +312,81 @@ Class Admin extends CI_Controller{
 	}
 
 
-	public function courses(){
-		//ogretmenler ile dersler bu alanda iliskilendirilecek
+	public function add_course(){
+		$data = array();
+		$this->load->model('departments_model');
+		$data['departments'] = $this->departments_model->GetDepartments();
 
+		if($this->input->post('optic') != null){
+			if(xss_check()){
+				$newCourse['optic'] = $this->input->post('optic');
+				$newCourse['name'] = $this->input->post('name');
+				$newCourse['department'] = $this->input->post('department');
+
+				if(is_numeric($newCourse['optic']) && strlen($newCourse['optic']) == 3){
+					$this->load->model('course_model');
+					$result = $this->course_model->AddCourse($newCourse);
+					if($result === true){
+						set_success_msg('Ders başarıyla sisteme eklendi.');
+					}else{
+						set_error_msg($result);
+					}
+				}else{
+					set_error_msg('Girilen bilgilerde hata var!');
+				}
+				
+			}else{
+				set_error_msg('Başarısız XSS denemesi!');
+			}
+		}
+
+		$this->load->view('admin/add_course', $data);
+	}
+
+	public function delete_course($page = 1){
+		$data = array();
+		$this->load->model('departments_model');
+		$data['departments'] = $this->departments_model->GetDepartments();
+		$newSearch = ($this->input->post('search_btn') != null);
+		$search = array();
+
+		if($this->input->post('optic') != null){
+			$search['lesson_code'] = $this->input->post('optic');
+		}
+
+		if($this->input->post('course_name') != null){
+			$search['lesson_name'] = $this->input->post('course_name');
+		}
+
+		if($this->input->post('course_dept') != null){
+			$search['department'] = $this->departments_model->GetDepartmentByCode($this->input->post('course_dept'))->department_id;
+		}
+
+		if(isset($_SESSION['last_course_search']) && !$newSearch)
+			$search = $this->session->userdata('last_course_search');
+		else if($newSearch === true)
+			$page = 1;
+
+
+		$this->session->set_userdata('last_course_search', $search);
+
+
+		if(!empty($search)){
+			$this->load->model('course_model');
+			$result = $this->course_model->SearchCourse($search, $page);
+			//exit(var_dump($search));
+
+			$data['search_result'] = $result['limited'];
+			$data['all_count'] = $result['all_count'];
+
+			$config['base_url'] = site_url() . '/admin/delete_course/';
+			$config['total_rows'] = $data['all_count'];
+			$this->load->library('defaultpagination');
+			$data['pagination'] = $this->defaultpagination->create_links($config);
+		}
+
+
+		$this->load->view('admin/delete_course', $data);
 	}
 
 

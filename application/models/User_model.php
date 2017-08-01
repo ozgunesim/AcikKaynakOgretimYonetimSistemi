@@ -35,8 +35,9 @@ Class User_model extends CI_Model{
 		if(!empty($userArray) && $auth != -1){
 			$departments = $this->db->select('*')->from('departments')->get()->result_array();
 			foreach ($userArray as $u) {
-				if( $this->addOneUser($u, $auth, $departments) !== true )
-					return "Kullanıcı eklenirken hata oluştu!";
+				$result = $this->addOneUser($u, $auth, $departments) !== true ;
+				/*if($result !== true)
+					return $result;*/
 			}
 			return true;
 		}else{
@@ -129,8 +130,8 @@ Class User_model extends CI_Model{
 	public function BanUser($user_id = -1){
 		if($user_id != -1){
 			$data = array(
-			'isActive' => '0'
-			);
+				'isActive' => '0'
+				);
 			$this->db->where('user_id', $user_id);
 			$this->db->update('users', $data);
 			return true;
@@ -143,8 +144,8 @@ Class User_model extends CI_Model{
 	public function ActivateUser($user_id = -1){
 		if($user_id != -1){
 			$data = array(
-			'isActive' => '1'
-			);
+				'isActive' => '1'
+				);
 			$this->db->where('user_id', $user_id);
 			$this->db->update('users', $data);
 			return true;

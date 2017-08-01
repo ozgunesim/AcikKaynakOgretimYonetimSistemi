@@ -94,8 +94,8 @@ $this->load->view('messages');
 						foreach ($table as $student) {
 							echo '<tr>';
 							printCell($student->index);
-							printCell($student->failure);
 							printCell($student->number);
+							printCell($student->failure);
 							printCell($student->surname);
 							printCell($student->name);
 							printCell($student->department);

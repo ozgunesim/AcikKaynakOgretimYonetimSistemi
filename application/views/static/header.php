@@ -34,126 +34,75 @@
     <div class="container-fluid no-margin no-padding">
       <div class="col-md-2 left-side">
       
-
-
-
-
-
-
-<div class="nav-side-menu">
-<div class="brand">
-  <h3 class="text-center">Özgün EŞİM</h3>
-  <h5 class="text-center">Sistem Yöneticisi</h5>
-</div>
-<i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
-
-<div class="menu-list">
-
-  <ul id="menu-content" class="menu-content collapse out">
-      <li>
-        <a href="#">
-        <i class="fa fa-home fa-lg"></i> Anasayfa
-        </a>
-      </li>
-
-      <li  data-toggle="collapse" data-target="#products" class="collapsed">
-        <a href="#"><i class="fa fa-book fa-lg"></i> Dersler <span class="arrow"></span></a>
-      </li>
-      <ul class="sub-menu collapse" id="products">
-          <li><a href="#">Ders Ekle</a></li>
-          <li><a href="#">Ders Sil</a></li>
-      </ul>
-
-
-      <li data-toggle="collapse" data-target="#service" class="collapsed">
-        <a href="#"><i class="fa fa-graduation-cap fa-lg"></i> Öğretmenler <span class="arrow"></span></a>
-      </li>  
-      <ul class="sub-menu collapse" id="service">
-        <a href="<?php echo site_url() . '/admin/add_teacher'?>"><li>Öğretmen Ekle</li></a>
-        <a href="<?php echo site_url() . '/admin/delete_teacher'?>"><li>Erişim Ayarları</li></a>
-      </ul>
-
-
-      <li data-toggle="collapse" data-target="#new" class="collapsed">
-        <a href="#"><i class="fa fa-child fa-lg"></i> Öğrenciler <span class="arrow"></span></a>
-      </li>
-      <ul class="sub-menu collapse" id="new">
-        <a href="<?php echo site_url() . '/admin/add_student'?>"><li>Öğrenci Ekle</li></a>
-        <a href="<?php echo site_url() . '/admin/delete_student'?>"><li>Erişim Ayarları</li></a>
-      </ul>
-
-
-       <li>
-        <a href="#">
-        <i class="fa fa-bullhorn fa-lg"></i> Duyurular
-        </a>
-        </li>
-
-       <li>
-        <a href="#">
-        <i class="fa fa-gear fa-lg"></i> Kişisel Ayarlar
-        </a>
-      </li>
-
-      <li>
-        <a href="#">
-        <i class="fa fa-sign-out fa-lg"></i> Çıkış Yap
-        </a>
-      </li>
-  </ul>
-</div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <!--button class="btn btn-lg btn-block btn-default visible-sm visible-xs toggle-menu">MENÜ</button>
-        <ul class="menu-list">
-          <a href="#"><li style="margin-bottom: 15px;"><i class="fa fa-home"></i> Anasayfa <i class="fa fa-caret-right" aria-hidden="true"></i></li></a>
-          <li class="menu-header">
-            <i class="fa fa-book"></i> Dersler
-          </li>
-
-          <a href="#"><li><i class="fa fa-plus"></i> Ders Ekle <i class="fa fa-caret-right" aria-hidden="true"></i></li></a>
-          <a href="#"><li><i class="fa fa-minus"></i> Ders Sil <i class="fa fa-caret-right" aria-hidden="true"></i></li></a>
-
-          <li class="menu-header">
-            <i class="fa fa-graduation-cap"></i> Öğretmenler
-          </li>
-
-          <a href="#"><li><i class="fa fa-plus"></i> Öğretmen Ekle <i class="fa fa-caret-right" aria-hidden="true"></i></li></a>
-          <a href="#"><li><i class="fa fa-minus"></i> Öğretmen Sil <i class="fa fa-caret-right" aria-hidden="true"></i></li></a>
-
-          <li class="menu-header">
-            <i class="fa fa-child"></i> Öğrenciler
-          </li>
-          
-          <a href="#"><li><i class="fa fa-plus"></i> Öğrenci Ekle <i class="fa fa-caret-right" aria-hidden="true"></i></li></a>
-          <a href="#"><li><i class="fa fa-minus"></i> Öğrenci Engelle / Aktifleştir <i class="fa fa-caret-right" aria-hidden="true"></i></li></a>
-
-          <a href="#"><li style="margin-top: 15px;"><i class="fa fa-sitemap"></i> Yetkilendirmeler <i class="fa fa-caret-right" aria-hidden="true"></i></li></a>
-          <a href="#"><li><i class="fa fa-bullhorn"></i> Duyurular <i class="fa fa-caret-right" aria-hidden="true"></i></li></a>
-          <a href="#"><li><i class="fa fa-gear"></i> Kişisel Ayarlar <i class="fa fa-caret-right" aria-hidden="true"></i></li></a>
-          <a href="#"><li style="margin-top: 15px;"><i class="fa fa-sign-out"></i> Çıkış Yap <i class="fa fa-caret-right" aria-hidden="true"></i></li></a>
-
-        </ul-->
-
-        <footer class="hidden-sm hidden-xs legal-notice"><h6 class="text-center"><small>Copyright <?php echo date('Y'); ?> | Developed by Özgün EŞİM<br>Bu proje akademik amaçlar da dahil olmak üzere hiçbir şekilde izinsiz kullanılamaz. Bu siteyi görüntüleyen herkes lisans sözleşmesini kabul etmiş sayılır. <a href="<?php echo base_url(); ?>license.txt">Lisans Sözleşmesi</a><br>İletişim: <a href="mailto:ozgunesim@gmail.com">ozgunesim@gmail.com</a></small></h6></footer>
-
-
-
+      <div class="nav-side-menu">
+      <div class="brand">
+        <h3 class="text-center">Özgün EŞİM</h3>
+        <h5 class="text-center">Sistem Yöneticisi</h5>
       </div>
-      <div class="col-md-10 main-container">
+      <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+
+      <div class="menu-list">
+
+        <ul id="menu-content" class="menu-content collapse out">
+            <li>
+              <a href="#">
+              <i class="fa fa-home fa-lg"></i> Anasayfa
+              </a>
+            </li>
+
+            <li  data-toggle="collapse" data-target="#products" class="collapsed">
+              <a href="#"><i class="fa fa-book fa-lg"></i> Dersler <span class="arrow"></span></a>
+            </li>
+            <ul class="sub-menu collapse" id="products">
+                <a href="<?php echo site_url() . '/admin/add_course'?>"><li>Ders Ekle</li></a>
+                <a href="<?php echo site_url() . '/admin/delete_course'?>"><li>Ders Sil</li></a>
+            </ul>
+
+
+            <li data-toggle="collapse" data-target="#service" class="collapsed">
+              <a href="#"><i class="fa fa-graduation-cap fa-lg"></i> Öğretmenler <span class="arrow"></span></a>
+            </li>  
+            <ul class="sub-menu collapse" id="service">
+              <a href="<?php echo site_url() . '/admin/add_teacher'?>"><li>Öğretmen Ekle</li></a>
+              <a href="<?php echo site_url() . '/admin/assign_course'?>"><li>Öğretmene Ders Ata</li></a>
+              <a href="<?php echo site_url() . '/admin/delete_teacher'?>"><li>Erişim Ayarları</li></a>
+            </ul>
+
+
+            <li data-toggle="collapse" data-target="#new" class="collapsed">
+              <a href="#"><i class="fa fa-child fa-lg"></i> Öğrenciler <span class="arrow"></span></a>
+            </li>
+            <ul class="sub-menu collapse" id="new">
+              <a href="<?php echo site_url() . '/admin/add_student'?>"><li>Öğrenci Ekle</li></a>
+              <a href="<?php echo site_url() . '/admin/delete_student'?>"><li>Erişim Ayarları</li></a>
+            </ul>
+
+
+             <li>
+              <a href="#">
+              <i class="fa fa-bullhorn fa-lg"></i> Duyurular
+              </a>
+              </li>
+
+             <li>
+              <a href="#">
+              <i class="fa fa-gear fa-lg"></i> Kişisel Ayarlar
+              </a>
+            </li>
+
+            <li>
+              <a href="#">
+              <i class="fa fa-sign-out fa-lg"></i> Çıkış Yap
+              </a>
+            </li>
+        </ul>
+      </div>
+      </div>
+
+
+  <footer class="hidden-sm hidden-xs legal-notice"><h6 class="text-center"><small>Copyright <?php echo date('Y'); ?> | Developed by Özgün EŞİM<br>Bu proje akademik amaçlar da dahil olmak üzere hiçbir şekilde izinsiz kullanılamaz. Bu siteyi görüntüleyen herkes lisans sözleşmesini kabul etmiş sayılır. <a href="<?php echo base_url(); ?>license.txt">Lisans Sözleşmesi</a><br>İletişim: <a href="mailto:ozgunesim@gmail.com">ozgunesim@gmail.com</a></small></h6></footer>
+
+
+
+</div>
+<div class="col-md-10 main-container">

@@ -21,7 +21,7 @@
 	}
 	if(isset($search_result)){
 		?>
-		<h4 style="text-align: right;">Bulunan Sonuç Sayısı: <span class="badge"><?php echo $all_count; ?></span></h4>
+		<h4 style="text-align: right;">Bulunan Sonuç Sayısı: <span class="badge"><?php echo $all_count; ?></span> - <button id="new-search" class="btn btn-warning">Sonuçları Temizle</button></h4>
 		<div class="row">
 			<div class="col-md-12">
 				<table class="table table-condensed table-hover table-striped">
@@ -98,7 +98,7 @@
 								</select>
 
 								<span class="input-group-btn">
-									<button type="button" class="btn btn-default btn-search clear-select"><i class="fa fa-eraser"></i> Temizle</button>
+									<button type="button" class="btn btn-default btn-search clear-honour"><i class="fa fa-eraser"></i> Temizle</button>
 								</span>
 							</div>
 						</div>
@@ -125,7 +125,7 @@
 								</select>
 
 								<span class="input-group-btn">
-									<button type="button" class="btn btn-default btn-search clear-select"><i class="fa fa-eraser"></i> Temizle</button>
+									<button type="button" class="btn btn-default btn-search clear-dept"><i class="fa fa-eraser"></i> Temizle</button>
 								</span>
 							</div>
 						</div>
@@ -172,17 +172,24 @@
 <?php $this->load->view('static/footer'); ?>
 <script>
 	$(document).ready(function(){
-		$('.clear-select').click(function(){
-			$('select option').eq(0).prop('selected', true);
+		$('.clear-dept').click(function(){
+			$('select[name=teacher_dept] option').eq(0).prop('selected', true);
 		});
 		$('.clear-name').click(function(){
 			$('input[name=teacher_name]').val('');
 		});
-		$('.clear-num').click(function(){
-			$('input[name=teacher_num]').val('');
+		$('.clear-honour').click(function(){
+			$('select[name=teacher_honour] option').eq(0).prop('selected', true);
 		});
 		$('.clear-email').click(function(){
 			$('input[name=teacher_email]').val('');
+		});
+		$('#new-search').click(function(){
+			$('select option').eq(0).prop('selected', true);
+			var csrf = $('input[name=<?php echo $this->security->get_csrf_token_name(); ?>').val();
+			$('input').val('');
+			$('input[name=<?php echo $this->security->get_csrf_token_name(); ?>').val(csrf);
+			$('button[name=search_btn]').click();
 		});
 	});
 </script>
