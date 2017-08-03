@@ -7,6 +7,12 @@ Class Departments_model extends CI_Model{
 		$this->load->database();
 	}
 
+	public function GetDepartmentCount(){
+		$query = $this->db->select('count(*) as total')->from('departments')->get();
+		return $query->row()->total;
+	}
+
+
 	public function GetDepartments(){
 		$query = $this->db->select('*')->from('departments')->get();
 		return $query->result();

@@ -8,6 +8,11 @@ Class Course_model extends CI_Model{
 		$this->load->helper('special_insert');
 	}
 
+	public function GetCourseCount(){
+		$query = $this->db->select('count(*) as total')->from('courses')->get();
+		return $query->row()->total;
+	}
+
 	public function AddCourse($newCourse = array()){
 		if(!empty($newCourse)){
 			$this->load->model('departments_model');
@@ -40,6 +45,15 @@ Class Course_model extends CI_Model{
 			$this->load->config('pagination');
 			$limit = $this->config->item('pagination_limit');
 			$result['limited'] = $this->db->limit($limit, ($page-1) * $limit)->get()->result();
+			return $result;
+		}else{
+			return _EMPTY;
+		}
+	}
+
+	public function DeleteCourse($c_id = -1){
+		if($c_id != -1){
+			$result = $this->db->delete('courses', array('lesson_id' => $c_id));
 			return $result;
 		}else{
 			return _EMPTY;

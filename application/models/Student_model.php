@@ -25,7 +25,10 @@ Class Student_model extends CI_Model{
 	}
 
 	public function GetStudentCount(){
-		$query = $this->db->select('count(*) as total')->from('users')->where('user_auth', 3)->get();
+		$query = $this->db->select('count(*) as total')->from('users')
+		->where('user_auth', 3)
+		->where('isActive', '1')
+		->get();
 		return $query->row()->total;
 	}
 

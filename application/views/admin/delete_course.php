@@ -25,7 +25,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<table class="table table-condensed table-hover table-striped">
-					<form action="<?php echo site_url() . '/admin/delete_teacher'; ?>" method="post">
+					<form action="<?php echo site_url() . '/admin/delete_course'; ?>" method="post">
 						<tr>
 							<th>Ders Adı</th><th>Optik Kodu</th><th>Bölüm</th><th>(İşlem?)</th>
 						</tr>
@@ -123,23 +123,25 @@
 
 		</div>
 
+		<!--input type="hidden" style="display: none;" name="page" value="1" /-->
+		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
 
-	</div>
+		<div class="row">
+			<div class="col-md-offset-4 col-md-4">
+				<div class="col-md-12 text-center text-info">Boş bıraktığınız alanlar aramaya dahil edilmez.</div>
+				<button type="submit" name="search_btn" value="1" class="btn btn-primary btn-block"><i class="fa fa-search"></i> Ara</button><br>
+			</div><br>
+		</div>
+	</form>
 
 
-	<!--input type="hidden" style="display: none;" name="page" value="1" /-->
-	<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
 
-	<div class="row">
-		<div class="col-md-offset-4 col-md-4">
-			<div class="col-md-12 text-center text-info">Boş bıraktığınız alanlar aramaya dahil edilmez.</div>
-			<button type="submit" name="search_btn" value="1" class="btn btn-primary btn-block"><i class="fa fa-search"></i> Ara</button><br>
-		</div><br>
-	</div>
-</form>
+
 
 
 </div>
+
+
 
 
 

@@ -15,7 +15,8 @@ Class DefaultPagination{
 		$this->CI->load->library('pagination');
 		$this->CI->load->config('pagination');
 		$limit = $this->CI->config->item('pagination_limit');
-		$config['per_page'] = $limit;
+		if(!isset($config['per_page']))
+			$config['per_page'] = $limit;
 		$config['use_page_numbers'] = TRUE;
 		//$config['attributes'] = array('class' => 'btn btn-default');
 		$config['full_tag_open'] = '<div class="text-center"><ul class="pagination">';

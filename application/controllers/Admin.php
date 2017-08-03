@@ -7,9 +7,39 @@ Class Admin extends CI_Controller{
 		$this->load->library('session');
 		$this->load->helper('xss_helper');
 		$this->load->helper('messages');
+		$this->load->helper('cookie');
 		/*if($this->auth->check_auth( array(1) ) !== true){
 			exit('Yetkiniz Yok!');
 		}*/
+	}
+
+	public function home($page = 1){
+		$data = array();
+		$this->load->model('notice_model');
+		$result = $this->notice_model->GetNotices($page);
+		$data['notices'] = $result['limited'];
+		$data['all_count'] = $result['all_count'];
+
+		$this->load->model('teacher_model');
+		$data['teacher_count'] = $this->teacher_model->GetTeacherCount();
+
+		$this->load->model('student_model');
+		$data['student_count'] = $this->student_model->GetStudentCount();
+
+		$this->load->model('course_model');
+		$data['course_count'] = $this->course_model->GetCourseCount();
+
+		$this->load->model('departments_model');
+		$data['department_count'] = $this->departments_model->GetDepartmentCount();
+
+		$config['base_url'] = site_url() . '/admin/home';
+		$config['total_rows'] = $data['all_count'];
+		$config['per_page'] = 5;
+		$this->load->library('defaultpagination');
+		$data['pagination'] = $this->defaultpagination->create_links($config);
+
+
+		$this->load->view('admin/home', $data);
 	}
 
 	public function add_student(){
@@ -147,13 +177,13 @@ Class Admin extends CI_Controller{
 				$data['email'] = $search['email'];
 			}
 
-			if(isset($_SESSION['last_student_search']) && !$newSearch)
-				$search = $this->session->userdata('last_student_search');
+			if(get_cookie('last_student_search') != null && !$newSearch)
+				$search = json_decode(get_cookie('last_student_search'), true);
 			else if($newSearch === true)
 				$page = 1;
 
 
-			$this->session->set_userdata('last_student_search', $search);
+			set_cookie('last_student_search', json_encode($search), '3600');
 
 			//exit(var_dump($search));
 
@@ -284,13 +314,12 @@ Class Admin extends CI_Controller{
 				$data['email'] = $search['email'];
 			}
 
-			if(isset($_SESSION['last_teacher_search']) && !$newSearch)
-				$search = $this->session->userdata('last_teacher_search');
+			if(get_cookie('last_teacher_search') != null && !$newSearch)
+				$search = json_decode(get_cookie('last_teacher_search'), true);
 			else if($newSearch === true)
 				$page = 1;
 
-
-			$this->session->set_userdata('last_teacher_search', $search);
+			set_cookie('last_teacher_search', json_encode($search), '3600');
 
 			//exit(var_dump($search));
 
@@ -350,6 +379,16 @@ Class Admin extends CI_Controller{
 		$newSearch = ($this->input->post('search_btn') != null);
 		$search = array();
 
+		if($this->input->post('delete_id') != null){
+			$this->load->model('course_model');
+			$result = $this->course_model->DeleteCourse($this->security->xss_clean($this->input->post('delete_id')));
+			if($result === true){
+				set_success_msg('Ders başarıyla silindi.');
+			}else{
+				set_error_msg('Beklenmeyen hata!');
+			}
+		}
+
 		if($this->input->post('optic') != null){
 			$search['lesson_code'] = $this->input->post('optic');
 		}
@@ -362,13 +401,13 @@ Class Admin extends CI_Controller{
 			$search['department'] = $this->departments_model->GetDepartmentByCode($this->input->post('course_dept'))->department_id;
 		}
 
-		if(isset($_SESSION['last_course_search']) && !$newSearch)
-			$search = $this->session->userdata('last_course_search');
+		if(get_cookie('last_course_search') != null && !$newSearch)
+			$search = json_decode(get_cookie('last_course_search'), true);
 		else if($newSearch === true)
 			$page = 1;
 
 
-		$this->session->set_userdata('last_course_search', $search);
+		set_cookie('last_course_search', json_encode($search), '3600');
 
 
 		if(!empty($search)){
@@ -387,6 +426,29 @@ Class Admin extends CI_Controller{
 
 
 		$this->load->view('admin/delete_course', $data);
+	}
+
+
+	public function add_notice(){
+		$data = array();
+		if($this->input->post('content') != null){
+			$this->load->model('notice_model');
+			if(xss_check()){
+				$result = $this->notice_model->AddNotice(
+					$this->input->post('content'),
+					'97',
+					$this->input->post('type')
+				);
+				if($result === true){
+					set_success_msg('Bildirim başarıyla eklendi.');
+				}else{
+					set_error_msg('Beklenmeyen hata!');
+				}
+			}else{
+				set_error_msg('Başarısız XSS denemesi!');
+			}
+		}
+		$this->load->view('admin/add_notice', $data);
 	}
 
 

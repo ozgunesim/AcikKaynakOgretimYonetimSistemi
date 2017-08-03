@@ -25,7 +25,10 @@ Class Teacher_model extends CI_Model{
 	}*/
 
 	public function GetTeacherCount(){
-		$query = $this->db->select('count(*) as total')->from('users')->where('user_auth', 2)->get();
+		$query = $this->db->select('count(*) as total')->from('users')
+		->where('user_auth', 2)
+		->where('isActive', '1')
+		->get();
 		return $query->row()->total;
 	}
 
