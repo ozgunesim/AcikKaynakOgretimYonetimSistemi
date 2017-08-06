@@ -51,12 +51,13 @@ Class User_model extends CI_Model{
 		if(isset($u->surname)){
 			$u->name = $u->name . ' ' . $u->surname;
 		}
+		$isActive = ($auth == 2) ? 1 : 0;
 		$insertArray = array(
 			'user_mail' => $u->email,
 			'user_pw' => md5("default"),
 			'user_auth' => $auth,
 			'user_name' => $u->name,
-			'isActive' => 0
+			'isActive' => $isActive
 			);
 
 		$inserted = special_insert('users',$insertArray);

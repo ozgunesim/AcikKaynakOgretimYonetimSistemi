@@ -18,7 +18,8 @@
 </li>  
 <ul class="sub-menu collapse" id="teacher">
   <a href="<?php echo site_url() . 'admin/add_teacher'?>"><li>Öğretmen Ekle</li></a>
-  <a href="<?php echo site_url() . 'admin/assign_course'?>"><li>Öğretmene Ders Ata</li></a>
+  <a href="<?php echo site_url() . 'admin/assign_course'?>"><li>Öğretmene Ders/Şube Ata</li></a>
+  <a href="<?php echo site_url() . 'admin/delete_assignment'?>"><li>Öğretmenden Şube Sil</li></a>
   <a href="<?php echo site_url() . 'admin/delete_teacher'?>"><li>Erişim Ayarları</li></a>
 </ul>
 

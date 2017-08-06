@@ -3,7 +3,7 @@
 <div class="container-fluid">
 	<div class="col-md-8">
 		<div class="row">
-			<div class="col-md-12" style="padding: 5px;">
+			<div class="col-md-12" style="padding-left: 5px;padding-right: 5px;">
 				<section class="awNotices">
 
 					<?php
@@ -43,16 +43,16 @@
 		<div class="row">
 			<div style="padding: 5px;">
 				<div class="panel panel-default">
-					<div class="panel-heading"><i class="fa fa-chevron-right"></i> Hızlı Ulaşım</div>
+					<div class="panel-heading"><i class="fa fa-chevron-right"></i> Hızlı Erişim</div>
 					<div class="panel-body">
 						<h4>Dersler</h4>
-						<a href="#" class="btn btn-default"><i class="fa fa-arrow-circle-right"></i> Ders Ekle</a> <a href="#" class="btn btn-default"><i class="fa fa-arrow-circle-right"></i> Ders Sil</a><br><br>
+						<a href="<?=site_url() . 'admin/add_course';?>" class="btn btn-link"><i class="fa fa-arrow-circle-right"></i> Ders Ekle</a> <a href="<?=site_url() . 'admin/delete_course';?>" class="btn btn-link"><i class="fa fa-arrow-circle-right"></i> Ders Sil</a><hr>
 						<h4>Öğrenciler</h4>
-						<a href="#" class="btn btn-default"><i class="fa fa-arrow-circle-right"></i> Öğrenci Ekle</a> <a href="#" class="btn btn-default"><i class="fa fa-arrow-circle-right"></i> Erişim Ayarları</a><br><br>
+						<a href="<?=site_url() . 'admin/add_student';?>" class="btn btn-link"><i class="fa fa-arrow-circle-right"></i> Öğrenci Ekle</a> <a href="<?=site_url() . 'admin/delete_student';?>" class="btn btn-link"><i class="fa fa-arrow-circle-right"></i> Erişim Ayarları</a><hr>
 						<h4>Öğretmenler</h4>
-						<a href="#" class="btn btn-default"><i class="fa fa-arrow-circle-right"></i> Öğretmen Ekle</a> <a href="#" class="btn btn-default"><i class="fa fa-arrow-circle-right"></i> Öğretmene Ders Ata</a> <a href="#" class="btn btn-default"><i class="fa fa-arrow-circle-right"></i> Erişim Ayarları</a><br><br>
+						<a href="#" class="btn btn-link"><i class="fa fa-arrow-circle-right"></i> Öğretmen Ekle</a> <a href="#" class="btn btn-link"><i class="fa fa-arrow-circle-right"></i> Öğretmene Ders/Şube Ata</a> <a href="#" class="btn btn-link"><i class="fa fa-arrow-circle-right"></i> Öğretmenden Şube Sil</a> <a href="#" class="btn btn-link"><i class="fa fa-arrow-circle-right"></i> Erişim Ayarları</a><hr>
 						<h4>Duyurular</h4>
-						<a href="#" class="btn btn-default"><i class="fa fa-arrow-circle-right"></i> Duyuru Ekle</a> <a href="#" class="btn btn-default"><i class="fa fa-arrow-circle-right"></i> Duyuru Sil</a><br><br>
+						<a href="#" class="btn btn-link"><i class="fa fa-arrow-circle-right"></i> Duyuru Ekle</a> <a href="#" class="btn btn-link"><i class="fa fa-arrow-circle-right"></i> Duyuru Sil</a><hr>
 					</div>
 				</div>
 			</div>

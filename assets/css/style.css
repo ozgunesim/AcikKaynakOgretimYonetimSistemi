@@ -124,7 +124,7 @@ body > .container-fluid{
 
 .panel-default>.panel-heading {
 	font-size: 13px;
-	font-weight: 600;
+	/*font-weight: 600;*/
 	color: #586069;
 	background-color: #f3f5f8;
 	border-bottom: 1px solid #e1e4e8;
@@ -296,7 +296,7 @@ body > .container-fluid{
 
   .legal-notice{
    margin: 15px;
-   border: 1px dashed #de1f1f;
+   border: 4px dashed #de1f1f;
    padding: 5px;
    border-radius: 4px;
  }

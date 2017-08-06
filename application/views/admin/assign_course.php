@@ -1,12 +1,13 @@
 <?php $this->load->view('static/header');?>
-<h2 class="page-title">Dersi Sistemden Kaldır</h2>
+<h2 class="page-title">Öğretmene Ders/Şube Ata</h2>
 
 
 
 <div class="container-fluid">
 	<div class="alert alert-info">
-		<strong>Bilgi:</strong> Silinen ders sistemden tamamen kaldırılır.<br>
-		<strong>Birden fazla ölçütü bir arada kullanarak arama yapabilirsiniz</strong>
+		<strong>Atanan her ders yeni bir şubedir. Şube eklemek için dersi ve hocayı seçerek tekrar atama yapın.</strong>
+		<h4>Bu öğretmen bu derse daha önce atanmış ise otomatik olarak yeni şube açılır.</h4>
+		<strong>Şubeleri menüde "Öğretmenden Şube Sil" linkini seçerek inceleyebilir/silebilirsiniz.</strong>
 	</div>
 
 	<?php
@@ -50,7 +51,7 @@
 	?>
 
 
-	<form action="<?php echo site_url() . '/admin/delete_course'; ?>" method="post">
+	<form action="" method="post">
 		<div class="row">
 
 			<div class="col-md-5" id="email-tab">
@@ -114,7 +115,7 @@
 
 		<div class="row">
 			<div class="col-md-offset-4 col-md-4">
-				<div class="col-md-12 text-center text-info"><strong>Atanan her ders yeni bir şubedir. Şube eklemek için dersi ve hocayı seçerek tekrar atama yapın.</strong></div>
+				<div class="col-md-12 text-center text-info"><hr><strong>Atanan her ders yeni bir şubedir. Şube eklemek için dersi ve hocayı seçerek tekrar atama yapın.</strong><hr></div>
 				<div class="col-md-12 text-center text-info">Dersin günü ve saatini öğretmen belirleyecektir.</div>
 				<button type="submit" name="search_btn" value="1" class="btn btn-primary btn-block"><i class="fa fa-link"></i> Ders Ata</button><br>
 			</div><br>

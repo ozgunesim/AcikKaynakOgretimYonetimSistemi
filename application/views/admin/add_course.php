@@ -1,5 +1,5 @@
 <?php $this->load->view('static/header');?>
-<h2 class="page-title">Sisteme Ders Ekle / Şube Oluştur</h2>
+<h2 class="page-title">Sisteme Ders Ekle</h2>
 <div class="container-fluid">
 
 <?php $this->load->view('messages'); ?>
