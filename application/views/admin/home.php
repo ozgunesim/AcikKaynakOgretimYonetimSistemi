@@ -3,6 +3,22 @@
 <div class="container-fluid">
 	<div class="col-md-8">
 		<div class="row">
+			<div class="col-md-12" style="padding: 5px;">
+				<section class="awNotices">
+
+					<?php
+					foreach ($notices as $ntc) {
+						?>
+						<a notice-color="dark"><i class="fa fa-bullhorn"></i><?=$ntc->notice_text;?></a>
+
+						<?php
+					}
+					?>
+				</section>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+		<div class="row" style="margin-top: 45px;">
 			<div class="col-md-3 admin-home-box-container">
 				<div class="admin-home-box bg-red"><i class="fa fa-graduation-cap fa-lg"></i> <span class="countup"><?php echo $teacher_count; ?></span>
 					<div class="admin-home-box-footer">Aktif Öğretmen</div>
@@ -43,9 +59,9 @@
 		</div>
 
 	</div>
-	<div class="col-md-4">
-		<div class="panel panel-default">
-			<div class="panel-heading"><i class="fa fa-bullhorn"></i> Duyurular:</div>
+	<div class="col-md-4" style="padding-right: 0;">
+		<!--div class="panel panel-default">
+			<div class="panel-heading"><i class="fa fa-bullhorn"></i> Duyuru Arşivi:</div>
 			<div class="panel-body">
 				<?php
 				$types = array(
@@ -67,7 +83,7 @@
 				?>
 
 			</div>
-		</div>
+		</div-->
 		<div class="panel panel-default">
 			<div class="panel-heading"><i class="fa fa-calendar"></i> Takvim:</div>
 			<div class="panel-body">
@@ -82,14 +98,50 @@
 
 <?php $base = base_url() ."assets/" ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $base; ?>css/zabuto_calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo $base; ?>css/ticker.css">
 <script src="<?php echo $base; ?>js/zabuto_calendar.min.js"></script>
-<script src="<?php echo $base; ?>js/countUp.min.js"></script>
-
+<script src="<?php echo $base; ?>js/ticker.js"></script>
 <script type="application/javascript">
+	function awNotice() {
+		if(!$('.awNotices').hasClass('stopped')){
+			var $active = $('.awNotices a.active');
+			var $next = $active.next('a');    
+
+			if ($next.length){
+				$next.addClass('active');
+				$active.removeClass('active');
+			}else{
+				$active.removeClass('active');
+				$('.awNotices a:first-of-type').addClass('active');
+			}
+		}
+	}
+
 	$(document).ready(function () {
 		$("#my-calendar").zabuto_calendar({
 			language: "tr",
 			today: true
 		});
+
+
+		$('.awNotices').append('<span class="controller fa fa-pause"></span>');
+		$('.awNotices a:nth-of-type(1)').addClass('active');
+
+
+
+		$('.awNotices .controller').click(function(){
+			$(this).toggleClass('fa-pause fa-play');
+			$('.awNotices').toggleClass('stopped');
+		})
+
+		function awNotices(timer){
+			setInterval( "awNotice()", timer);
+		}
+
+		awNotices(4500);
+
+
+
 	});
 </script>
+

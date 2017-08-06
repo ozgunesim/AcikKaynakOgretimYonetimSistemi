@@ -37,7 +37,7 @@ Class User_model extends CI_Model{
 			foreach ($userArray as $u) {
 				$result = $this->addOneUser($u, $auth, $departments) !== true ;
 				/*if($result !== true)
-					return $result;*/
+				return $result;*/
 			}
 			return true;
 		}else{
@@ -153,6 +153,63 @@ Class User_model extends CI_Model{
 			return _EMPTY;
 		}
 		
+	}
+
+	public function ChangeUserName($name = "", $user_id = -1){
+		if(!empty($name) && $user_id != -1){
+			$updateArray = array(
+				'user_name' => $name
+				);
+			$this->db->where('user_id', $user_id);
+			$this->db->update('users', $updateArray);
+			$result = ($this->db->affected_rows() > 0);
+			if($result === true){
+				if($result === true){
+					$this->ReloadUser();
+				}
+			}
+			return $result;
+		}else{
+			return _EMPTY;
+		}
+	}
+
+	public function ChangeEmail($email = "", $user_id = -1){
+		if(!empty($email) && $user_id != -1){
+			$updateArray = array(
+				'user_mail' => $email
+				);
+			$this->db->where('user_id', $user_id);
+			$this->db->update('users', $updateArray);
+			$result = ($this->db->affected_rows() > 0);
+			if($result === true){
+				$this->ReloadUser();
+			}
+			return $result;
+		}else{
+			return _EMPTY;
+		}
+	}
+
+	public function ReloadUser($user_id = -1){
+		$this->db->select('users.*, auths.*')
+		->from('users')
+		->join('auths', 'users.user_auth = auths.auth_id','inner');
+
+		if($user_id == -1){
+			$user_sess = $this->session->userdata('user');
+			$this->db->where('users.user_id', $user_sess->user_id);
+		}else{
+			$this->db->where('users.user_id', $user_id);
+		}
+		$query = $this->db->get();
+		if($query->num_rows() > 0){
+			$result = $query->row();
+			$this->session->set_userdata('user', $result);
+			return $result;
+		}else{
+			return null;
+		}
 	}
 	
 }

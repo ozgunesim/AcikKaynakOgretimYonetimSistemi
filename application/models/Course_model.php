@@ -13,6 +13,14 @@ Class Course_model extends CI_Model{
 		return $query->row()->total;
 	}
 
+	public function GetAllCourses(){
+		$query = $this->db->select('courses.*, departments.*')
+		->from('courses')
+		->join('departments', 'departments.department_id = courses.department', 'inner')
+		->get();
+		return $query->result();
+	}
+
 	public function AddCourse($newCourse = array()){
 		if(!empty($newCourse)){
 			$this->load->model('departments_model');
@@ -20,6 +28,9 @@ Class Course_model extends CI_Model{
 			$insertArray = array(
 				'lesson_code' => $newCourse['optic'],
 				'lesson_name' => $newCourse['name'],
+				'practice_hours' => $newCourse['practice'],
+				'theoric_hours' => $newCourse['theoric'],
+				'akts' => $newCourse['akts'],
 				'department'  => $dept
 			);
 			$result = special_insert('courses', $insertArray);

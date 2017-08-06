@@ -32,6 +32,16 @@ Class Teacher_model extends CI_Model{
 		return $query->row()->total;
 	}
 
+	public function GetAllTeachers(){
+		$query = $this->db->select('users.*, teacher_info.*, auths.*, departments.*, honours.*')
+			->from('users')
+			->join('teacher_info', 'users.user_id = teacher_info.t_user_id', 'inner')
+			->join('auths', 'users.user_auth = auths.auth_id', 'inner')
+			->join('departments', 'departments.department_id = teacher_info.department', 'inner')
+			->join('honours', 'honours.honour_id = teacher_info.honour', 'inner')
+			->get();
+		return $query->result();
+	}
 
 	public function SearchTeacher($params = array(), $page=-1){
 		if(!empty($params) && $page != -1){

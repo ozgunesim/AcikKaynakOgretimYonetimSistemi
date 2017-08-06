@@ -1,5 +1,5 @@
 <?php $this->load->view('static/header');?>
-<h2 class="page-title">Sisteme Ders Ekle</h2>
+<h2 class="page-title">Sisteme Ders Ekle / Şube Oluştur</h2>
 <div class="container-fluid">
 
 <?php $this->load->view('messages'); ?>
@@ -7,10 +7,19 @@
 <form action="" method="post">
 	<label style="display: block;">Dersin Optik Kodu:
 		<input type="text" required  pattern="\d{3}" placeholder="3 karakter numerik optik kod girin..." name="optic" class="form-control" />
-	</label>
+	</label><br>
+	<label style="display: block;">Teorik Ders Saati:
+		<input type="text" required  pattern="\d{1,2}" placeholder="yalnızca rakam" name="theoric" class="form-control" />
+	</label><br>
+	<label style="display: block;">Pratik Ders Saati:
+		<input type="text" required  pattern="\d{1,2}" placeholder="yalnızca rakam" name="practice" class="form-control" />
+	</label><br>
+	<label style="display: block;">AKTS:
+		<input type="text" required  pattern="\d*" placeholder="yalnızca rakam" name="akts" class="form-control" />
+	</label><br>
 	<label style="display: block;">Dersin Adı:
 		<input type="text" required name="name" class="form-control" />
-	</label>
+	</label><br>
 	<label style="display: block;">Dersi Açan Bölüm:
 		<select name="department" class="form-control">
 			<?php

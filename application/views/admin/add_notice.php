@@ -1,14 +1,14 @@
 <?php $this->load->view('static/header');?>
-<h2 class="page-title">Sisteme Öğretmen Ekle</h2>
+<h2 class="page-title">Duyuru Ekle</h2>
 <div class="container-fluid">
 
 	<?php $this->load->view('messages'); ?>
 
 	<form action="" method="post">
-		<label style="display: block;">Bildirim Metnini Girin:
+		<label style="display: block;">Duyuru Metnini Girin:
 			<textarea rows="5" maxlength="400" required name="content" class="form-control"></textarea>
 		</label>
-		<label style="display: block;">Bildirim Rengi:
+		<label style="display: block;">Duyuru Rengi:
 			<select id="colorselector" name="type">
 				<option value="1" data-color="#dc143c">KIRMIZI</option>
 				<option value="2" data-color="#ffd700">SARI</option>

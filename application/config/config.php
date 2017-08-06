@@ -35,7 +35,8 @@ $config['base_url'] = 'http://localhost/mtk473_java';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
+/*$config['index_page'] = 'index.php';*/
+$config['index_page'] = "";
 
 /*
 |--------------------------------------------------------------------------
@@ -523,3 +524,28 @@ $config['rewrite_short_tags'] = FALSE;
 | Array:		array('10.0.1.200', '192.168.5.0/24')
 */
 $config['proxy_ips'] = '';
+
+
+
+/*
+|--------------------------------------------------------------------------
+| CAPTCHA KONTROLU
+|--------------------------------------------------------------------------
+|
+| Login ekraninda captcha dogrulama sisteminin olup olmayacagini
+| belirler. Bu sistem brute force engellemek icin kullanilir.
+|
+*/
+$config['enable_captcha'] = FALSE;
+
+
+/*
+|--------------------------------------------------------------------------
+| UYELIK AKTIVASYONU
+|--------------------------------------------------------------------------
+|
+| Email üzerinden üyelik aktivasyonu kontrolu olup olmayacagini
+| belirler.
+|
+*/
+$config['enable_email_activation'] = FALSE;

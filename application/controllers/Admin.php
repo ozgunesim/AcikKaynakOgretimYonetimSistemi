@@ -2,15 +2,17 @@
 if (!defined('BASEPATH')) exit('No direct script access allowed');
 Class Admin extends CI_Controller{
 	//public $file = '';
+	var $user_sess = null;
 	function __construct(){
 		parent::__construct();
 		$this->load->library('session');
 		$this->load->helper('xss_helper');
 		$this->load->helper('messages');
 		$this->load->helper('cookie');
-		/*if($this->auth->check_auth( array(1) ) !== true){
+		if($this->auth->check_auth( array(1) ) !== true){
 			exit('Yetkiniz Yok!');
-		}*/
+		}
+		$this->user_sess = $this->session->userdata('user');
 	}
 
 	public function home($page = 1){
@@ -244,7 +246,7 @@ Class Admin extends CI_Controller{
 				$user->email = trim($this->input->post('email'));
 				$user->department = trim($this->input->post('department'));
 				$user->honour = trim($this->input->post('honour'));
-				$user->bio = trim($this->input->post('bio'));
+				$user->bio = trim(str_replace("\n", "<br>", strip_tags($this->input->post('bio'))));
 
 				if(
 					filter_var($user->email, FILTER_VALIDATE_EMAIL)
@@ -340,6 +342,15 @@ Class Admin extends CI_Controller{
 		$this->load->view('admin/delete_teacher', $data);
 	}
 
+	public function assign_course(){
+		$data = array();
+		$this->load->model('course_model');
+		$this->load->model('teacher_model');
+		$data['courses'] = $this->course_model->GetAllCourses();
+		$data['teachers'] = $this->teacher_model->GetAllTeachers();
+		$this->load->view('admin/assign_course', $data);
+	}
+
 
 	public function add_course(){
 		$data = array();
@@ -348,11 +359,30 @@ Class Admin extends CI_Controller{
 
 		if($this->input->post('optic') != null){
 			if(xss_check()){
-				$newCourse['optic'] = $this->input->post('optic');
-				$newCourse['name'] = $this->input->post('name');
-				$newCourse['department'] = $this->input->post('department');
+				$isValidInput = true;
+				try{
+					$newCourse['optic'] = (int)$this->input->post('optic');
+					$newCourse['name'] = $this->input->post('name');
+					$newCourse['department'] = $this->input->post('department');
+					$newCourse['theoric'] = (int)$this->input->post('theoric');
+					$newCourse['practice'] = (int)$this->input->post('practice');
+					$newCourse['akts'] = (int)$this->input->post('akts');
+				}catch(Exception $e){
+					set_error_msg('Hatalı girdi var!');
+					$isValidInput = false;
+				}
 
-				if(is_numeric($newCourse['optic']) && strlen($newCourse['optic']) == 3){
+				if($isValidInput === true &&
+					is_int($newCourse['optic']) &&
+					strlen($newCourse['optic']) == 3 &&
+					is_int($newCourse['theoric']) &&
+					$newCourse['theoric'] < 10 &&
+					$newCourse['theoric'] > 0 &&
+					is_int($newCourse['practice']) &&
+					$newCourse['practice'] < 10 &&
+					$newCourse['practice'] > 0 &&
+					is_int($newCourse['akts'])
+				){
 					$this->load->model('course_model');
 					$result = $this->course_model->AddCourse($newCourse);
 					if($result === true){
@@ -435,10 +465,10 @@ Class Admin extends CI_Controller{
 			$this->load->model('notice_model');
 			if(xss_check()){
 				$result = $this->notice_model->AddNotice(
-					$this->input->post('content'),
+					strip_tags($this->input->post('content')),
 					'97',
 					$this->input->post('type')
-				);
+					);
 				if($result === true){
 					set_success_msg('Bildirim başarıyla eklendi.');
 				}else{
@@ -449,6 +479,69 @@ Class Admin extends CI_Controller{
 			}
 		}
 		$this->load->view('admin/add_notice', $data);
+	}
+
+	public function delete_notice($page = 1){
+		$data = array();
+		$this->load->model('notice_model');
+
+		if($this->input->post('delete_notice') != null){
+			$result = $this->notice_model->DeleteNotice( $this->security->xss_clean($this->input->post('delete_notice')));
+			if($result !== true){
+				set_error_msg('Silme işleminde beklenmeyen hata!');
+			}
+		}
+
+		$result = $this->notice_model->GetNotices($page);
+		$data['notices'] = $result['limited'];
+		$data['all_count'] = $result['all_count'];
+
+		$config['base_url'] = site_url() . '/admin/delete_notice';
+		$config['total_rows'] = $data['all_count'];
+		$config['per_page'] = 5;
+		$this->load->library('defaultpagination');
+		$data['pagination'] = $this->defaultpagination->create_links($config);
+		$this->load->view('admin/delete_notice', $data);
+	}
+
+	public function settings(){
+		$data = array();
+		if($this->input->post('user_name') != null){
+			if(xss_check()){
+				$this->load->model('user_model');
+				$result = $this->user_model->ChangeUserName(
+					strip_tags($this->input->post('user_name')),
+					$this->user_sess->user_id
+					);
+				if($result === true)
+					set_success_msg('Ad soyad başarıyla değiştirildi.');
+				else
+					set_error_msg('Beklenmeyen hata!');
+			}
+			
+		}else if($this->input->post('user_email') != null){
+			if(xss_check()){
+				$email = $this->input->post('user_email');
+				if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+					$this->load->model('user_model');
+					$result = $this->user_model->ChangeEmail(
+						strip_tags($email),
+						$this->user_sess->user_id
+						);
+					if($result === true)
+						set_success_msg('Email başarıyla değiştirildi.');
+					else
+						set_error_msg('Beklenmeyen hata!');
+				}else{
+					set_error_msg('Geçersiz email!');
+				}
+				
+			}
+			
+		}
+
+
+		$this->load->view('admin/settings', $data);
 	}
 
 

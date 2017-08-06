@@ -14,9 +14,10 @@ Class Auth{
 	public function check_auth($allowed = array()){
 		//bu alanda kisinin yetkilerinin ilgili sayfayi görmek icin yeterli olup olmadigi kontrol ediliyor
 		if($this->check_session()){
-			$user = $this->session->userdata('user');
+			$user = $this->CI->session->userdata('user');
 			return in_array($user->auth_id, $allowed);
 		}else{
+			redirect('user/login');
 			return false;
 		}
 

@@ -11,16 +11,14 @@
   <title>MTK473 Proje</title>
 
   <!-- Bootstrap Core CSS -->
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <link href="<?=$base?>css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Custom Fonts -->
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto" rel="stylesheet">
-
+  <link href="<?=$base?>css/font-awesome.min.css" rel="stylesheet" type="text/css">
   <!-- Theme CSS -->
-  <link href="<?php echo $base; ?>css/style.css" rel="stylesheet">
+  <link href="<?=$base?>css/style.css" rel="stylesheet">
 
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+  <link href="<?=$base?>css/animate.css" rel="stylesheet">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -36,67 +34,27 @@
       
       <div class="nav-side-menu">
       <div class="brand">
-        <h3 class="text-center">Özgün EŞİM</h3>
-        <h5 class="text-center">Sistem Yöneticisi</h5>
+        <h3 class="text-center"><?=($this->session->userdata('user')->user_name);?></h3>
+        <h5 class="text-center"><?=($this->session->userdata('user')->auth_name);?></h5>
       </div>
       <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
 
       <div class="menu-list">
 
         <ul id="menu-content" class="menu-content collapse out">
-            <li>
-              <a href="<?php echo site_url() . '/admin/home'?>">
-                <i class="fa fa-home fa-lg"></i> Anasayfa
-              </a>
-            </li>
-
-            <li  data-toggle="collapse" data-target="#courses" class="collapsed">
-              <a href="#"><i class="fa fa-book fa-lg"></i> Dersler <span class="arrow"></span></a>
-            </li>
-            <ul class="sub-menu collapse" id="courses">
-                <a href="<?php echo site_url() . '/admin/add_course'?>"><li>Ders Ekle</li></a>
-                <a href="<?php echo site_url() . '/admin/delete_course'?>"><li>Ders Sil</li></a>
-            </ul>
-
-
-            <li data-toggle="collapse" data-target="#teacher" class="collapsed">
-              <a href="#"><i class="fa fa-graduation-cap fa-lg"></i> Öğretmenler <span class="arrow"></span></a>
-            </li>  
-            <ul class="sub-menu collapse" id="teacher">
-              <a href="<?php echo site_url() . '/admin/add_teacher'?>"><li>Öğretmen Ekle</li></a>
-              <a href="<?php echo site_url() . '/admin/assign_course'?>"><li>Öğretmene Ders Ata</li></a>
-              <a href="<?php echo site_url() . '/admin/delete_teacher'?>"><li>Erişim Ayarları</li></a>
-            </ul>
-
-
-            <li data-toggle="collapse" data-target="#student" class="collapsed">
-              <a href="#"><i class="fa fa-child fa-lg"></i> Öğrenciler <span class="arrow"></span></a>
-            </li>
-            <ul class="sub-menu collapse" id="student">
-              <a href="<?php echo site_url() . '/admin/add_student'?>"><li>Öğrenci Ekle</li></a>
-              <a href="<?php echo site_url() . '/admin/delete_student'?>"><li>Erişim Ayarları</li></a>
-            </ul>
-
-            <li data-toggle="collapse" data-target="#notices" class="collapsed">
-              <a href="#"><i class="fa fa-bullhorn fa-lg"></i> Duyurular <span class="arrow"></span></a>
-            </li>
-            <ul class="sub-menu collapse" id="notices">
-              <a href="<?php echo site_url() . '/admin/add_notice'?>"><li>Duyuru Ekle</li></a>
-              <a href="<?php echo site_url() . '/admin/delete_notice'?>"><li>Duyuru Sil</li></a>
-            </ul>
-
-
-             <li>
-              <a href="#">
-              <i class="fa fa-gear fa-lg"></i> Kişisel Ayarlar
-              </a>
-            </li>
-
-            <li>
-              <a href="#">
-              <i class="fa fa-sign-out fa-lg"></i> Çıkış Yap
-              </a>
-            </li>
+            <?php
+            $user_sess = $this->session->userdata('user');
+            if($user_sess != null){
+              if($user_sess->user_auth == 1){//admin
+                $this->load->view('admin/side_menu');
+              }else if($user_sess->user_auth == 2){//ogretmen
+                $this->load->view('teacher/side_menu');
+              }else if($user_sess->user_auth == 3){//ogrenci
+                $this->load->view('student/side_menu');
+              }
+            }
+            ?>
+            
         </ul>
       </div>
       </div>
