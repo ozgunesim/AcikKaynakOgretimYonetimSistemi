@@ -108,7 +108,9 @@
 				</div>
 			</div>
 		</div>
-
+		<!--div class="text-center">
+		<strong>Ortak Sınıf:</strong><br><input type="checkbox" name="is_common" data-toggle="toggle" data-on="EVET" data-off="HAYIR" data-onstyle="success" data-offstyle="default">
+		</div-->
 
 		<!--input type="hidden" style="display: none;" name="page" value="1" /-->
 		<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
@@ -134,7 +136,12 @@
 
 
 
-<?php $this->load->view('static/footer'); ?>
+<?php $this->load->view('static/footer');
+
+$base = base_url() ."assets/" ?>
+<link href="<?=$base?>css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="<?=$base?>js/bootstrap-toggle.min.js"></script>
+
 <script>
 	$(document).ready(function(){
 		$('.clear-course').click(function(){

@@ -90,15 +90,16 @@ Class Teacher_model extends CI_Model{
 	}
 
 	//ŞUBELERI DB'YE EKLENME SIRALARINA GORE YENIDEN ADLANDIRIR.
-	private function reorder_classes($course, $teacher){
+	private function reorder_subclasses($course, $teacher){
 		$all_classes = $this->db->select('*')->from('assigned_courses')
 		->where('course', $course)
 		->where('teacher', $teacher)
 		->get()->result();
+		//exit(var_dump($all_classes)."<br>$course <br> $teacher");
 		$classIndex = 1;
 		foreach ($all_classes as $c) {
 			$updateArray = array(
-				'class' => $classIndex
+				'subclass' => $classIndex
 				);
 			$this->db->where('assign_id', $c->assign_id);
 			$this->db->update('assigned_courses', $updateArray);
@@ -108,14 +109,43 @@ Class Teacher_model extends CI_Model{
 
 	/* OGRETMENE SUBE ATAMASI BURADA YAPILACAK */
 	public function AssignCourse($params){
+		$course = $this->db->select('*')->from('courses')->where('lesson_id', $params['course'])->get()->row();
+		$p = $course->practice_hours;
+		$t = $course->theoric_hours;
+
+		
+
 		$insertArray = array(
 			'course' => $params['course'],
 			'teacher' => $params['teacher']
 			);
-		$this->load->helper('special_insert');
-		$result = special_insert('assigned_courses', $insertArray);
-		if($result === true)
-			$this->reorder_classes($params['course'], $params['teacher']);
+		//$this->load->helper('special_insert');
+		$this->db->insert('assigned_courses', $insertArray);
+		$result = ($this->db->affected_rows() > 0);
+
+		if($result === true){
+			$insert_id = $this->db->insert_id();
+			$this->reorder_subclasses($params['course'], $params['teacher']);
+
+			$insertArray = array();
+
+			for($i=0; $i<$t; $i++){
+				array_push($insertArray, array(
+					'assigned_course' => $insert_id,
+					'type' => 1									//teorik ders
+				));
+			}
+
+			for($i=0; $i<$p; $i++){
+				array_push($insertArray, array(
+					'assigned_course' => $insert_id,
+					'type' => 2									//pratik ders
+				));
+			}
+
+			$this->db->insert_batch('assigned_course_data', $insertArray);
+			$result = ($this->db->affected_rows() > 0);
+		}
 
 		return $result;
 	}
@@ -186,6 +216,97 @@ Class Teacher_model extends CI_Model{
 			
 			return $result;
 
+		}else{
+			return _EMPTY;
+		}
+	}
+
+	public function GetAssignedCourses($teacher_id){
+		$query = $this->db->select('*')
+			->from('assigned_courses')
+			->join('assigned_course_data', 'assigned_courses.assign_id = assigned_course_data.assigned_course', 'inner')
+			->join('users', 'assigned_courses.teacher = users.user_id', 'inner')
+			->join('teacher_info', 'users.user_id = teacher_info.t_user_id', 'inner')
+			->join('auths', 'users.user_auth = auths.auth_id', 'inner')
+			//->join('departments', 'departments.department_id = teacher_info.department', 'inner')
+			->join('honours', 'honours.honour_id = teacher_info.honour', 'inner')
+			->join('courses', 'assigned_courses.course = courses.lesson_id', 'inner')
+			->join('departments', 'courses.department = departments.department_id', 'inner')
+			->where('assigned_courses.teacher', $teacher_id)
+			->order_by('course', 'asc');
+
+		$result = $query->get();
+		//exit(var_dump($result));
+		return $result->result();
+
+	}
+
+	/*
+	SELECT *
+	FROM `weekly_programs`
+	INNER JOIN `weekly_program_data` ON `weekly_programs`.`prog_id` = `weekly_program_data`.`program`
+	INNER JOIN `assigned_course_data` ON `assigned_course_data`.`acd_id` = `weekly_program_data`.`assigned_course_data`
+	INNER JOIN `assigned_courses` ON `assigned_course_data`.`assigned_course` = `assigned_courses`.`assign_id`
+	INNER JOIN `users` ON `assigned_courses`.`teacher` = `users`.`user_id`
+	INNER JOIN `courses` ON `assigned_courses`.`course` = `courses`.`lesson_id`
+	WHERE `users`.`user_id` = '128'
+	*/
+
+	public function GetWeeklyProgram($teacher_id = -1){
+		if($teacher_id != -1){
+			$query = $this->db->select('weekly_programs.*, weekly_program_data.*, users.*, courses.*, assigned_courses.*, assigned_course_data.*')
+			->from('weekly_programs')
+			->join('weekly_program_data', 'weekly_programs.prog_id = weekly_program_data.program', 'inner')
+			->join('assigned_course_data','assigned_course_data.acd_id = weekly_program_data.assigned_course_data','inner')
+			->join('assigned_courses', 'assigned_course_data.assigned_course = assigned_courses.assign_id', 'inner')
+			->join('users','assigned_courses.teacher = users.user_id', 'inner')
+			->join('courses', 'assigned_courses.course = courses.lesson_id', 'inner')
+			->where('users.user_id', $teacher_id)
+			->get();
+
+			//exit(var_dump($query));
+
+			if($query->num_rows() > 0){
+				return $query->result();
+			}else{
+				return null;
+			}
+		}else{
+			return _EMPTY;
+		}
+	}
+
+	public function UpdateWeeklyProgram($teacher_id = -1, $program_array = array()){
+		if($teacher_id != -1 && !empty($program_array)){
+			$this->db->where('teacher', $teacher_id);
+			$this->db->delete('weekly_programs');
+			$insertArray = array(
+				'teacher' => $teacher_id
+			);
+			$this->db->insert('weekly_programs', $insertArray);
+			$insert_id = $this->db->insert_id();
+
+			$pdata_array = array();
+			for($i=0; $i<5; $i++){
+				for($j=0; $j<8;$j++){
+					if($program_array[$i][$j] != 0){
+						$pdata_row = array(
+							'program' => $insert_id,
+							'day' => $i,
+							'hour' => $j,
+							'assigned_course_data' => $program_array[$i][$j]
+						);
+						array_push($pdata_array, $pdata_row);
+					}
+					
+				}
+			}
+			if(!empty($pdata_array)){
+				$this->db->insert_batch('weekly_program_data', $pdata_array);
+				return ($this->db->affected_rows() > 0);
+			}else{
+				return true;
+			}
 		}else{
 			return _EMPTY;
 		}

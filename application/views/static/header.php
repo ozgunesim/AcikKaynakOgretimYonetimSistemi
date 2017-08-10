@@ -19,6 +19,9 @@
   <link href="<?=$base?>css/style.css" rel="stylesheet">
 
   <link href="<?=$base?>css/animate.css" rel="stylesheet">
+  
+  <!-- jQuery -->
+  <script src="<?=$base?>js/jquery.min.js"></script>
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -31,7 +34,7 @@
   <body>
     <div class="container-fluid no-margin no-padding">
       <div class="col-md-2 left-side">
-      
+
       <div class="nav-side-menu">
       <div class="brand">
         <h3 class="text-center"><?=($this->session->userdata('user')->user_name);?></h3>

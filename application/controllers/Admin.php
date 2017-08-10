@@ -350,8 +350,12 @@ Class Admin extends CI_Controller{
 		$data['teachers'] = $this->teacher_model->GetAllTeachers();
 
 		if($this->input->post('course') != null && $this->input->post('teacher') != null){
+			//exit(var_dump($_POST));
 			$params['course'] = $this->security->xss_clean(strip_tags($this->input->post('course')));
 			$params['teacher'] = $this->security->xss_clean(strip_tags($this->input->post('teacher')));
+			//$params['is_common'] = ($this->input->post('is_common') != null && $this->input->post('is_common') == 'on');
+			//ortak subeler icin. bu secenek henüz aktif degil.
+			
 			$result = $this->teacher_model->AssignCourse($params);
 			if($result === true)
 				set_success_msg('Şube başarıyla oluşturuldu.');

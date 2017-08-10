@@ -237,6 +237,7 @@ body > .container-fluid{
     padding-left: 0px;
     /*border-left: 3px solid #2e353d;*/
     border-bottom: 1px solid #0c0c0c;
+
   }
   .nav-side-menu li a {
     text-decoration: none;
@@ -249,14 +250,14 @@ body > .container-fluid{
   }
   .nav-side-menu li:hover {
     /*border-left: 3px solid #d19b3d;*/
-    background-color: #4f5b69;
-    -webkit-transition: all 1s ease;
-    -moz-transition: all 1s ease;
-    -o-transition: all 1s ease;
-    -ms-transition: all 1s ease;
-    transition: all 1s ease;
+    background-color: rgba(79,91,105,.50);
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    transition: all 0.3s ease;
   }
-  @media (max-width: 767px) {
+  @media (max-width: 970px) {
     .nav-side-menu {
       position: relative;
       width: 100%;
@@ -281,7 +282,7 @@ body > .container-fluid{
       line-height: 50px !important;
     }
   }
-  @media (min-width: 767px) {
+  @media (min-width: 970px) {
     .nav-side-menu .menu-list .menu-content {
       display: block;
     }
@@ -485,4 +486,24 @@ body > .container-fluid{
   right: 0;
   padding: 8px 10px;
   line-height: 150%;
+}
+
+.nav-side-menu .brand h3{
+  padding: 15px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/*.prog_table select option{
+  color: #fff;
+}*/
+
+.course-select option {
+    color: green;
+    font-weight: bold;
+}
+
+.course-select option:disabled {
+    color: red;
+    text-decoration: line-through;
 }

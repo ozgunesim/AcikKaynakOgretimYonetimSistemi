@@ -19,12 +19,12 @@ if(has_msg()){
 
 		if(isset($_SESSION['err_msg'])){
 			?>
-				<div class="alert alert-danger text-center"><?php echo $_SESSION['err_msg']; ?></div>
+				<div class="alert animated pulse alert-danger text-center"><?php echo $_SESSION['err_msg']; ?></div>
 			<?php
 		}
 		if(isset($_SESSION['success_msg'])){
 			?>
-				<div class="alert alert-success text-center"><?php echo $_SESSION['success_msg']; ?></div>
+				<div class="alert animated pulse alert-success text-center"><?php echo $_SESSION['success_msg']; ?></div>
 			<?php
 		}
 		destroy_messages();

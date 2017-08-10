@@ -1,5 +1,5 @@
 <?php $this->load->view('static/header');?>
-<h2 class="page-title">Yoklama Gir</h2>
+<h2 class="page-title">Ders Programı Ayarla</h2>
 
 
 <script>
@@ -99,10 +99,7 @@
 		}
 	}
 
-	var_dump($_POST);
-
-	if(isset($program)){
-		//exit(var_dump($program));
+	if(isset($assigned_courses)){
 		?>
 		
 		<div class="row">
@@ -114,24 +111,6 @@
 		</div>
 
 		<div class="row">
-			<h3>Hafta Seçin:</h3>
-			<div class="btn-group colors" data-toggle="buttons">
-				<label class="btn btn-success active">
-					<input type="radio" name="options" value="red" autocomplete="off" checked> Red
-				</label>
-				<label class="btn btn-success">
-					<input type="radio" name="options" value="orange" autocomplete="off"> Orange
-				</label>
-				<label class="btn btn-success">
-					<input type="radio" name="options" value="yellow" autocomplete="off"> Yellow
-				</label>
-			</div>
-			<hr>
-
-		</div>
-
-		<div class="row">
-			<h3>Ders Saati Seçin:</h3>
 			<form action="" method="post">
 				<table class="prog_table table table-condensed table-hover table-striped">
 					<tr>
@@ -147,64 +126,72 @@
 					function create_rgb(){
 						return (string)(rand(50,220).','.rand(50,220).','.rand(50,220));
 					}
-					for($i = 0; $i<count($program); $i++){
-						$program[$i]->color = create_rgb();
+					for($i = 0; $i<count($assigned_courses); $i++){
+						$assigned_courses[$i]->color = create_rgb();
 					}
 					$hours = array(
 						'09:00 - 09:45', '10:00 - 10:45', '11:00 - 11:45', '12:00 - 12:45', 
 						'13:00 - 13:45', '14:00 - 14:45', '15:00 - 15:45', '16:00 - 16:45', 
 						);
-
+					
 					$course_types = array('( Teorik )', '( Pratik )');
 					for($i = 0; $i<8; $i++) : ?>
 					<tr>
 						<td>(<?=($i+1);?>)</td><td><?=$hours[$i];?></td>
 						<?php for($j = 0; $j<5; $j++) : ?>
 							<td>
-								<?php 
-								$isEmpty = true;
-								foreach ($program as $c){
-									if($c->day == $j && $c->hour == $i){
-										$isEmpty = false;
-										break;
-									}
-								}
-								if(!$isEmpty){
+								<select id="prog-select-<?=$i.$j;?>" name="days[<?=$j;?>][]" class="form-control input-sm course-select">
+									<option selected value="-1">Boş</option>
+									<?php foreach ($assigned_courses as $c) :
 									?>
-									<button type="submit" name="attendance" value="<?=$c->acd_id;?>" class="btn btn-sm btn-primary btn-block"><?=$c->lesson_name.' '.$course_types[$c->type-1].' - Şube: '.$c->subclass;?></button>
-									<?php
-								}else{
-									?>
-									<button type="button" class="btn btn-sm btn-default btn-block" disabled="disabled">BOŞ</button>
-									<?php
-								}
+									<option value="<?=$c->acd_id;?>"><?=$c->lesson_name.' '.$course_types[$c->type-1].' - Şube: '.$c->subclass;?></option>
+									<!--option style="font-size: 1pt; background-color: #000000;" disabled>&nbsp;</option-->
+								<?php endforeach;
+
+								foreach ($program as $p) {
+									if($p->hour == $i && $p->day == $j){
+										?>
+										<script>
+											selected_courses.push({
+												elem: '#prog-select-<?=$i.$j;?>',
+												index: <?=$p->assigned_course;?>,
+												val: <?=$p->assigned_course_data;?>
+											});
+													/*$('#prog-select-<?=$i.$j;?>').val('<?=$p->assigned_course;?>');
+													set_selection($('#prog-select-<?=$i.$j;?>'));*/
+												</script>
+
+												<?php
+												break;
+											}
+										}
+
+										?>
+									</select>
+									<button type="button" class="btn btn-sm btn-danger btn-block clear-class" style="display: none;">Bu dersi sil</button>
+								</td>
+							<?php endfor; ?>
+
+						</tr>
+					<?php endfor; ?>
+
+				</table>
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
+				<div class="text-right"><button type="submit" class="btn btn-primary">Kaydet</button><hr></div>
+			</form>
+		</div>
+
+		<script>
+			for(var i=0; i<selected_courses.length; i++){
+				$(selected_courses[i].elem).val(selected_courses[i].val);
+				set_selection($(selected_courses[i].elem));
+			}
+		</script>
 
 
-								?>
-
-							</td>
-						<?php endfor; ?>
-
-					</tr>
-				<?php endfor; ?>
-
-			</table>
-			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
-			<div class="text-right"><button type="submit" class="btn btn-primary">Kaydet</button><hr></div>
-		</form>
-	</div>
-
-	<script>
-		for(var i=0; i<selected_courses.length; i++){
-			$(selected_courses[i].elem).val(selected_courses[i].val);
-			set_selection($(selected_courses[i].elem));
-		}
-	</script>
-
-
-	<?php
-}
-?>
+		<?php
+	}
+	?>
 
 
 
