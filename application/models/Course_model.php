@@ -31,10 +31,17 @@ Class Course_model extends CI_Model{
 				'practice_hours' => $newCourse['practice'],
 				'theoric_hours' => $newCourse['theoric'],
 				'akts' => $newCourse['akts'],
-				'department'  => $dept
+				'department'  => $dept,
+				'weeks' => $newCourse['weeks'],
+				'start_date' => $newCourse['start_date']
 			);
-			$result = special_insert('courses', $insertArray);
-			return $result;
+			//exit(var_dump($insertArray));
+			$result = $this->db->insert('courses', $insertArray);
+			if($this->db->affected_rows() > 0){
+				return true;
+			}else{
+				return 'Ders Eklenemedi. Böyle bir ders zaten olabilir.';
+			}
 		}else{
 			return _EMPTY;
 		}

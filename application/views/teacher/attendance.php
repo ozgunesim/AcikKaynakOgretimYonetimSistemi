@@ -89,6 +89,14 @@
 <div class="container-fluid">
 	
 	<?php
+	$hours = array(
+	'09:00 - 09:45', '10:00 - 10:45', '11:00 - 11:45', '12:00 - 12:45', 
+	'13:00 - 13:45', '14:00 - 14:45', '15:00 - 15:45', '16:00 - 16:45'
+	);
+	$days = array(
+		'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'cumartesi', 'Pazar'
+	);
+
 	$this->load->view('messages');
 	function printCell($str){
 		echo '<td>' . $str . '</td>';
@@ -150,10 +158,7 @@
 					for($i = 0; $i<count($program); $i++){
 						$program[$i]->color = create_rgb();
 					}
-					$hours = array(
-						'09:00 - 09:45', '10:00 - 10:45', '11:00 - 11:45', '12:00 - 12:45', 
-						'13:00 - 13:45', '14:00 - 14:45', '15:00 - 15:45', '16:00 - 16:45', 
-						);
+					
 
 					$course_types = array('( Teorik )', '( Pratik )');
 					for($i = 0; $i<8; $i++) : ?>
@@ -171,7 +176,7 @@
 								}
 								if(!$isEmpty){
 									?>
-									<button type="submit" name="attendance" value="<?=$c->acd_id;?>" class="btn btn-sm btn-primary btn-block"><?=$c->lesson_name.' '.$course_types[$c->type-1].' - Şube: '.$c->subclass;?></button>
+									<button type="submit" name="weekly_program_data" value="<?=$c->p_data_id;?>" class="btn btn-sm btn-primary btn-block"><?=$c->lesson_name.' '.$course_types[$c->type-1].' - Şube: '.$c->subclass;?></button>
 									<?php
 								}else{
 									?>
@@ -190,9 +195,87 @@
 
 			</table>
 			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
-			<div class="text-right"><button type="submit" class="btn btn-primary">Kaydet</button><hr></div>
 		</form>
 	</div>
+
+
+	<?php if(isset($student_list)){ ?>
+	<div class="modal fade" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<form action="" method="post">
+					<input name="day" type="hidden" value="<?=$student_list[0]->day;?>">
+					<input name="hour" type="hidden" value="<?=$student_list[0]->hour;?>">
+					<input name="p_data_id" type="hidden" value="<?=$p_data_id;?>">
+					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">Bu Derse Yoklama Gir:</h4>
+					</div>
+					<div class="modal-body">
+						<h3>Hafta Seçin:</h3>
+						<div class="btn-group colors" data-toggle="buttons">
+							<?php
+							var_dump($course_data);
+							for($i=0; $i<$course_data->weeks; $i++){
+							?>
+							<label class="btn btn-default">
+								<input type="radio" name="week" value="<?=($i+1);?>" autocomplete="off"> <?=($i+1).'. Hafta';?>
+							</label>
+							<?php
+							}
+							?>
+						</div>
+						<h3>Gün:</h3>
+						<?=$days[$student_list[0]->day];?>
+						<h3>Saat:</h3>
+						<?=$hours[$student_list[0]->hour];?>
+						<hr>
+
+						<?php
+						//var_dump($student_list);
+						?>
+						<table class="prog_table table table-condensed table-hover table-striped">
+						<tr>
+							<th>Numara</th><th>Ad Soyad</th><th>Bölüm</th><th>Derse Katılım</th>
+						</tr>
+						<?php
+						foreach ($student_list as $s) {
+						?>
+						<tr>
+							<td><?=$s->number;?></td>
+							<td><?=$s->user_name;?></td>
+							<td><?=$s->department_acronym.$s->department_code;?></td>
+							<td><input type="checkbox" class="att-check" name="att_data[]" data-toggle="toggle" data-on="EVET" data-off="HAYIR" data-onstyle="success" data-offstyle="default" value="<?=$s->user_id;?>"></td>
+						</tr>
+						<?php
+						}
+
+						?>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
+						<button type="submit" class="btn btn-primary">Kaydet</button>
+					</div>
+				</form>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	<script>
+	$(document).ready(function(){
+		/*$('.att-check').change(function(){
+			if( $(this).prop('checked') ){
+				$(this).val('1');
+			}else{
+				$(this).val('-1');
+			}
+		});*/
+	});
+	</script>
+	<?php
+	}
+	?>
 
 	<script>
 		for(var i=0; i<selected_courses.length; i++){
@@ -216,5 +299,18 @@
 
 
 
-<?php $this->load->view('static/footer'); ?>
+<?php $this->load->view('static/footer');
 
+$base = base_url() ."assets/" ?>
+<link href="<?=$base?>css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="<?=$base?>js/bootstrap-toggle.min.js"></script>
+
+<?php
+if(isset($student_list)){
+?>
+<script>
+	$('.modal').modal('show');
+</script>
+<?php
+}
+?>

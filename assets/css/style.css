@@ -63,6 +63,11 @@ body > .container-fluid{
   background-repeat: repeat;
 }
 
+.left-side::-webkit-scrollbar { 
+  /* This is the magic bit */
+  display: none;
+}
+
 .right-side{
   border-right: 1px solid #ddd; */
   min-height: 100%;

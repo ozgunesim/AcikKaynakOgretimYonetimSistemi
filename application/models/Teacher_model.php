@@ -311,6 +311,40 @@ Class Teacher_model extends CI_Model{
 			return _EMPTY;
 		}
 	}
+
+	public function UpdateAttendance($att_list = array(), $week = -1, $day = -1, $hour = -1, $assigned_course_data = -1){
+		if(!empty($att_list) && $week != -1 && $day != -1 && $hour != -1 && $assigned_course_data != -1){
+
+			//eski yoklama siliniyor
+			$this->db->where('week', $week);
+			$this->db->where('day', $day);
+			$this->db->where('hour', $hour);
+			$this->db->where('assigned_course_data', $assigned_course_data);
+			$this->db->delete('attendance');
+
+			$insertArray = array();
+			foreach ($att_list as $att) {
+				array_push(
+					$insertArray,
+					array(
+						'student_id' => $att['student_id'],
+						'week' => $week,
+						'day' => $day,
+						'hour' => $hour,
+						'state' => $att['state'],
+						'assigned_course_data' => $assigned_course_data
+					)
+				);
+			}
+
+			//dbye ekle
+			//hafta secince daha once yoklama alinmissa onlari getir.
+			exit(var_dump($insertArray));
+		}else{
+			return _EMPTY;
+		}
+		
+	}
 	
 }
 ?>

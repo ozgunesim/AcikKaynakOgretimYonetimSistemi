@@ -64,7 +64,7 @@ Class Teacher extends CI_Controller{
 			$result = $this->teacher_model->UpdateWeeklyProgram(
 				$this->session->userdata('user')->user_id,
 				$days
-			);
+				);
 			if($result === true)
 				set_success_msg('Program güncellendi.');
 			else
@@ -85,6 +85,62 @@ Class Teacher extends CI_Controller{
 		$this->load->model('teacher_model');
 		$data['program'] = $this->teacher_model->GetWeeklyProgram($this->session->userdata('user')->user_id);
 
+		if($this->input->post('weekly_program_data') != null){
+			$this->load->model('student_model');
+			$student_list = $this->student_model->GetEnrolments($this->input->post('weekly_program_data'));
+			$data['p_data_id'] = $this->input->post('weekly_program_data');
+			//exit(var_dump(array_pop($student_list)));
+			$data['student_list'] = $student_list;
+			if($student_list != null){
+				$this->load->model('course_model');
+				$course_data = $this->course_model->SearchCourse(
+					array('lesson_id' => array_pop($student_list)->course),
+					1
+					)['limited'][0];
+				//exit(var_dump($course_data));
+				$data['course_data'] = $course_data;
+			}
+			else{
+				set_error_msg('Bu derse kimse kayıt olmamış!');
+			}
+
+		}else if($this->input->post('att_data') != null){
+			$att_data = $this->input->post('att_data');
+			$this->load->model('student_model');
+			$student_list = $this->student_model->GetEnrolments($this->input->post('p_data_id'));
+			$assigned_course_data = $student_list[0]->assigned_course_data;
+			$week = $this->input->post('week');
+			$day = $this->input->post('day');
+			$hour = $this->input->post('hour');
+
+			$attendanceArray = array();
+			for ($i=0; $i<count($student_list); $i++) {
+				$student = $student_list[$i];
+				$isExist = false;
+				foreach ($att_data as $att) {
+					if($student->user_id == $att){
+						$isExist = true;
+						break;
+					}
+				}
+				$state = ($isExist) ? '1' : '0';
+				array_push(
+					$attendanceArray,
+					array(
+						'student_id' => $student->user_id,
+						'state' => $state
+					)
+				);
+			}
+			$this->load->model('teacher_model');
+			$result = $this->teacher_model->UpdateAttendance($attendanceArray, $week, $day, $hour, $assigned_course_data);
+			if($result === true){
+				set_success_msg('Yoklama başarıyla güncellendi.');
+			}else{
+				set_error_msg('Yoklama güncellenirken beklenmeyen hata!');
+			}
+			//exit(var_dump($student_list));
+		}
 
 		$this->load->view('teacher/attendance', $data);
 	}
