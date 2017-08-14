@@ -105,7 +105,7 @@
 		'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'cumartesi', 'Pazar'
 	);
 
-	var_dump($_POST);
+	//var_dump($_POST);
 
 	$this->load->view('messages');
 	function printCell($str){
@@ -121,7 +121,7 @@
 	if(isset($program)){
 		?>
 		
-		<div class="row">
+		<div class="row wp-toggle-menu-row">
 			<button id="wp-toggle-menu" class="btn btn-warning">
 				<span class="hide-span"><i class="fa fa-angle-left" aria-hidden="true"></i> Yan menüyü gizle</span>
 				<span class="show-span hidden"><i class="fa fa-angle-right" aria-hidden="true"></i> Yan menüyü göster</span>
@@ -156,10 +156,11 @@
 		<div class="modal fade" tabindex="-1" role="dialog">
 		<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
-					<form action="" method="post">
+					<form action="" method="post" target="start_att" id="select-course-form">
 						<input name="final_day" type="hidden" value="<?=$subclass_list[0]->day;?>">
 						<input name="final_date" type="hidden" value="<?=$final_date;?>">
 						<input name="final_assigned_course" type="hidden" value="<?=$final_assigned_course;?>">
+						<input type="hidden" name="final_hour_acd" id="acd-holder">
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -177,7 +178,7 @@
 								echo printCell($hours[$sub->hour]);
 								echo printCell($sub->lesson_name);
 								echo printCell($sub->subclass);
-								echo printCell('<button class="btn btn-primary" name="final_hour_acd" value="' . $sub->hour . '-' . $sub->acd_id . '"><i class="fa fa-pencil"></i> Yoklama Al</button>');
+								echo printCell('<button class="btn btn-primary start-att-btn" type="button" name="final_hour_acd" value="' . $sub->hour . '-' . $sub->acd_id . '"><i class="fa fa-pencil"></i> Yoklama Al</button>');
 								echo '</tr>';
 							}
 							?>
@@ -185,10 +186,10 @@
 
 
 						</div>
-						<div class="modal-footer">
+						<!--div class="modal-footer">
 							<button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
 							<button type="submit" class="btn btn-primary">Kaydet</button>
-						</div>
+						</div-->
 					</form>
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
@@ -201,16 +202,12 @@
 
 		<?php if(isset($ready_to_att)){
 		?>
-		<div class="modal fade" tabindex="-1" role="dialog">
-		<div class="modal-dialog modal-lg" role="document">
-				<div class="modal-content">
 					<form action="" method="post">
 						<input type="hidden" name="date" value="<?=$att_data->date;?>">
 						<input type="hidden" name="hour" value="<?=$att_data->hour;?>">
 						<input type="hidden" name="acd_id" value="<?=$att_data->acd_id;?>">
 						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
 						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 							<h4 class="modal-title">Yoklama Girin:</h4>
 						</div>
 						<div class="modal-body">
@@ -258,16 +255,15 @@
 
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
+							<button type="button" class="btn btn-default" id="close-window" data-dismiss="modal">Vazgeç</button>
 							<button type="submit" name="finish_att" value="1" class="btn btn-primary">Kaydet</button>
 						</div>
 					</form>
-				</div><!-- /.modal-content -->
-			</div><!-- /.modal-dialog -->
-		</div><!-- /.modal -->
+
+
 		<?php } ?>
 
-		<div class="row">
+		<div class="row" id="select-course-row">
 			<hr>
 			<form action="" method="post">
 				<select name="selected_course" class="form-control">
@@ -296,12 +292,22 @@
 }
 ?>
 
-
-
-
 </div>
 
 
+<?php
+if(isset($ready_to_att)){
+?>
+<script>
+	$('.left-side').hide();
+	$('.wp-toggle-menu-row').hide();
+	$('.main-container').removeClass('col-md-10').addClass('col-md-12');
+	$('#select-course-row').hide();
+	$('.page-title').hide();
+</script>
+<?php
+}
+?>
 
 
 
@@ -348,6 +354,16 @@ $(document).ready(function(){
     action: function(){
     	calendar_click(this.id);
     }
+	});
+
+	$('#close-window').click(function(){
+		window.close();
+	});
+
+	$('.start-att-btn').click(function(){
+		$('#acd-holder').val($(this).val());
+		  window.open('', 'start_att', 'width=800,height=600');
+		  document.getElementById('select-course-form').submit();
 	});
 });
 </script>

@@ -549,3 +549,12 @@ $config['enable_captcha'] = FALSE;
 |
 */
 $config['enable_email_activation'] = FALSE;
+
+
+
+/* CSRF ISTISNALARI */
+if (stripos($_SERVER["REQUEST_URI"],'/teacher/attendance') === FALSE) {
+	$config['csrf_protection'] 	= TRUE;
+}else{ 
+$config['csrf_protection'] 	= FALSE; 
+}

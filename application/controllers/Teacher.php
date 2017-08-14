@@ -235,13 +235,15 @@ Class Teacher extends CI_Controller{
 					}
 					array_push($att_array, $att_row);
 				}
-
+				//exit(var_dump($att_array));
 				$isSuccess = $this->teacher_model->UpdateAttendanceFromArray($att_array);
 
 				if($isSuccess === true){
-					set_success_msg('Yoklama başarıyla kaydedildi.');
+					$data['att_finished'] = '1';
+					set_success_msg('<script>$("body").html("<div class=\'alert alert-success\'>Yoklama kaydı başarılı. <button onclick=\'window.close();\' class=\'btn btn-default\'>Kapat</button></div>");</script>');
 				}else{
-					set_error_msg('Yoklama kaydedilirken beklenmeyen hata!');
+					$data['att_finished'] = '1';
+					set_error_msg('<script>$("body").html("<div class=\'alert alert-danger\'>Yoklama kaydedilirken beklenmeyen hata. <button onclick=\'window.close();\' class=\'btn btn-default\'>Kapat</button></div>");</script>');
 				}
 			}
 		}else{

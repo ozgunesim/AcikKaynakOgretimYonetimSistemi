@@ -351,9 +351,9 @@ Class Teacher_model extends CI_Model{
 	public function UpdateAttendanceFromArray($att_array = array()){
 		if(!empty($att_array)){
 			//exit(var_dump($att_array));
-			$date = $att_array[0]->date;
-			$hour = $att_array[0]->hour;
-			$assigned_course_data = $att_array[0]->assigned_course_data;
+			$date = $att_array[0]['date'];
+			$hour = $att_array[0]['hour'];
+			$assigned_course_data = $att_array[0]['assigned_course_data'];
 			//eski yoklama siliniyor
 			$this->db->where('date', $date);
 			$this->db->where('hour', $hour);
