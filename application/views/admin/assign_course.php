@@ -15,41 +15,7 @@
 	function printCell($str){
 		echo '<td>' . $str . '</td>';
 	}
-
-	if(isset($search_result)){
-		?>
-		<h4 style="text-align: right;">Bulunan Sonuç Sayısı: <span class="badge"><?php echo $all_count; ?></span> - <button id="new-search" class="btn btn-warning">Sonuçları Temizle</button></h4>
-		<div class="row">
-			<div class="col-md-12">
-				<table class="table table-condensed table-hover table-striped">
-					<form action="<?php echo site_url() . '/admin/delete_course'; ?>" method="post">
-						<tr>
-							<th>Ders Adı</th><th>Optik Kodu</th><th>Bölüm</th><th>(İşlem?)</th>
-						</tr>
-						<?php
-						foreach ($search_result as $s) {
-							echo "<tr>";
-							printCell($s->lesson_name);
-							printCell($s->lesson_code);
-							printCell($s->department_acronym.$s->department_code);
-							printCell('<button type="submit" name="delete_id" value = "' . $s->lesson_id . '" class="btn btn-xs btn-danger">Sil</button>');
-
-							echo "</tr>";
-						}
-						?>
-						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
-					</form>
-				</table>
-
-				<?php
-				echo $pagination;
-				?>
-			</div>
-		</div>
-		<?php
-	}
 	?>
-
 
 	<form action="" method="post">
 		<div class="row">
@@ -106,6 +72,18 @@
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<select name="semester" class="form-control">
+					<option disabled selected value>Bir ders dönemi seçin...</option>
+					<?php
+					foreach ($semesters as $s) {
+						echo "<option value='$s->semester_id' >" . $s->semester_name . '</option>';
+					}
+					?>
+				</select>
 			</div>
 		</div>
 		<!--div class="text-center">

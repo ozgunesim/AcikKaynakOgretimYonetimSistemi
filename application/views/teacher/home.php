@@ -45,6 +45,7 @@
 				<div class="panel panel-default">
 					<div class="panel-heading"><i class="fa fa-chevron-right"></i> Hızlı Erişim</div>
 					<div class="panel-body">
+						<?php $this->load->view('messages'); ?>
 						<h4>Dersler</h4>
 						<a href="<?=site_url() . 'admin/add_course';?>" class="btn btn-link"><i class="fa fa-arrow-circle-right"></i> Ders Ekle</a> <a href="<?=site_url() . 'admin/delete_course';?>" class="btn btn-link"><i class="fa fa-arrow-circle-right"></i> Ders Sil</a><hr>
 						<h4>Öğrenciler</h4>

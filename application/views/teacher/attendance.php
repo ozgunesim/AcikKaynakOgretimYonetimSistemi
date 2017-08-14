@@ -1,10 +1,18 @@
 <?php $this->load->view('static/header');?>
 <h2 class="page-title">Yoklama Gir</h2>
 
-
 <script>
 
 	var selected_courses = [];
+
+	function goToByScroll(id){
+    //id = id.replace("link", "");
+    // Scroll
+    $('html,body').animate({
+        scrollTop: ($("#"+id).offset().top + $('#'+id).height())},
+        'slow');
+	}
+
 
 	function set_selection(elem){
 		var index = $(elem).prop('selectedIndex');
@@ -97,6 +105,8 @@
 		'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'cumartesi', 'Pazar'
 	);
 
+	var_dump($_POST);
+
 	$this->load->view('messages');
 	function printCell($str){
 		echo '<td>' . $str . '</td>';
@@ -107,10 +117,8 @@
 		}
 	}
 
-	var_dump($_POST);
 
 	if(isset($program)){
-		//exit(var_dump($program));
 		?>
 		
 		<div class="row">
@@ -121,171 +129,170 @@
 			<hr>
 		</div>
 
+
 		<div class="row">
-			<h3>Hafta Seçin:</h3>
-			<div class="btn-group colors" data-toggle="buttons">
-				<label class="btn btn-success active">
-					<input type="radio" name="options" value="red" autocomplete="off" checked> Red
-				</label>
-				<label class="btn btn-success">
-					<input type="radio" name="options" value="orange" autocomplete="off"> Orange
-				</label>
-				<label class="btn btn-success">
-					<input type="radio" name="options" value="yellow" autocomplete="off"> Yellow
-				</label>
-			</div>
-			<hr>
+			<?php if($this->input->post('selected_course') != null){ ?>
+
+			<form action="" method="post" id="calendar-form">
+				<h3><strong></strong> Dersinizin Gününü Seçin:</h3>
+
+				<div id="att_calendar"></div>
+				<input type="hidden" id="selected-date-input" name="selected_date" />
+				<input type="hidden" name="final_course" value="<?=$selected_course->course;?>">
+				<input type="hidden" name="final_assigned_course" value="<?=$selected_course->acd_id;?>">
+				<input type="hidden" name="final_subclass" value="<?=$selected_course->subclass;?>">
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
+				<script>
+					goToByScroll('att_calendar');
+				</script>
+			</form>
+			<?php } ?>
+
 
 		</div>
 
-		<div class="row">
-			<h3>Ders Saati Seçin:</h3>
-			<form action="" method="post">
-				<table class="prog_table table table-condensed table-hover table-striped">
-					<tr>
-						<td>Ders</td>
-						<td>Saat</td>
-						<td>Pazartesi</td>
-						<td>Salı</td>
-						<td>Çarşamba</td>
-						<td>Perşembe</td>
-						<td>Cuma</td>
-					</tr>
-					<?php
-					function create_rgb(){
-						return (string)(rand(50,220).','.rand(50,220).','.rand(50,220));
-					}
-					for($i = 0; $i<count($program); $i++){
-						$program[$i]->color = create_rgb();
-					}
-					
 
-					$course_types = array('( Teorik )', '( Pratik )');
-					for($i = 0; $i<8; $i++) : ?>
-					<tr>
-						<td>(<?=($i+1);?>)</td><td><?=$hours[$i];?></td>
-						<?php for($j = 0; $j<5; $j++) : ?>
-							<td>
-								<?php 
-								$isEmpty = true;
-								foreach ($program as $c){
-									if($c->day == $j && $c->hour == $i){
-										$isEmpty = false;
-										break;
+		<?php if(isset($subclass_list)){ ?>
+		<div class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<form action="" method="post">
+						<input name="final_day" type="hidden" value="<?=$subclass_list[0]->day;?>">
+						<input name="final_date" type="hidden" value="<?=$final_date;?>">
+						<input name="final_assigned_course" type="hidden" value="<?=$final_assigned_course;?>">
+						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title">Saat Seçin:</h4>
+						</div>
+						<div class="modal-body">
+							<table class="table table-striped">
+							<tr>
+								<th>Gün</th><th>Saat</th><th>Ders</th><th>Şube</th><th>İşlem</th>
+							</tr>
+							<?php
+							foreach ($subclass_list as $sub) {
+								echo '<tr>';
+								echo printCell($days[$sub->day]);
+								echo printCell($hours[$sub->hour]);
+								echo printCell($sub->lesson_name);
+								echo printCell($sub->subclass);
+								echo printCell('<button class="btn btn-primary" name="final_hour_acd" value="' . $sub->hour . '-' . $sub->acd_id . '"><i class="fa fa-pencil"></i> Yoklama Al</button>');
+								echo '</tr>';
+							}
+							?>
+							</table>
+
+
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
+							<button type="submit" class="btn btn-primary">Kaydet</button>
+						</div>
+					</form>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
+
+		<?php } ?>
+
+
+
+		<?php if(isset($ready_to_att)){
+		?>
+		<div class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<form action="" method="post">
+						<input type="hidden" name="date" value="<?=$att_data->date;?>">
+						<input type="hidden" name="hour" value="<?=$att_data->hour;?>">
+						<input type="hidden" name="acd_id" value="<?=$att_data->acd_id;?>">
+						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title">Yoklama Girin:</h4>
+						</div>
+						<div class="modal-body">
+							<?php
+							if(!isset($enrolments) || empty($enrolments)){
+							?>
+							<div class="alert alert-warning">Bu derse henüz öğrenci kayıt olmamış.</div>
+							<?php
+							}else{
+							?>
+
+
+							<table class="table table-striped">
+							<tr>
+								<th>Numara</th><th>Ad Soyad</th><th>Bölüm</th><th>Katılım?</th>
+							</tr>
+							<?php
+							//var_dump($current_attendance);
+							foreach ($enrolments as $enr) {
+								echo '<tr>';
+								echo printCell($enr->number);
+								echo printCell($enr->user_name);
+								echo printCell($enr->department_acronym.$enr->department_code);
+								$checked = "";
+								if(isset($current_attendance) && $current_attendance != null){
+									foreach ($current_attendance as $cur_att) {
+										if($cur_att->student_id == $enr->user_id && $cur_att->state === '1'){
+											$checked = "checked";
+											break 1;
+										}
 									}
 								}
-								if(!$isEmpty){
-									?>
-									<button type="submit" name="weekly_program_data" value="<?=$c->p_data_id;?>" class="btn btn-sm btn-primary btn-block"><?=$c->lesson_name.' '.$course_types[$c->type-1].' - Şube: '.$c->subclass;?></button>
-									<?php
-								}else{
-									?>
-									<button type="button" class="btn btn-sm btn-default btn-block" disabled="disabled">BOŞ</button>
-									<?php
-								}
-
-
-								?>
-
-							</td>
-						<?php endfor; ?>
-
-					</tr>
-				<?php endfor; ?>
-
-			</table>
-			<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
-		</form>
-	</div>
-
-
-	<?php if(isset($student_list)){ ?>
-	<div class="modal fade" tabindex="-1" role="dialog">
-	<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content">
-				<form action="" method="post">
-					<input name="day" type="hidden" value="<?=$student_list[0]->day;?>">
-					<input name="hour" type="hidden" value="<?=$student_list[0]->hour;?>">
-					<input name="p_data_id" type="hidden" value="<?=$p_data_id;?>">
-					<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title">Bu Derse Yoklama Gir:</h4>
-					</div>
-					<div class="modal-body">
-						<h3>Hafta Seçin:</h3>
-						<div class="btn-group colors" data-toggle="buttons">
-							<?php
-							var_dump($course_data);
-							for($i=0; $i<$course_data->weeks; $i++){
+								echo printCell('<input type="checkbox" ' . $checked . ' data-width="100" name="att_check[]" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-on="BURADA" data-off="YOK" value="' . $enr->user_id . '">');
+								echo '</tr>';
+							}
 							?>
-							<label class="btn btn-default">
-								<input type="radio" name="week" value="<?=($i+1);?>" autocomplete="off"> <?=($i+1).'. Hafta';?>
-							</label>
+							</table>
+
+
 							<?php
 							}
 							?>
+							
+
+
 						</div>
-						<h3>Gün:</h3>
-						<?=$days[$student_list[0]->day];?>
-						<h3>Saat:</h3>
-						<?=$hours[$student_list[0]->hour];?>
-						<hr>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
+							<button type="submit" name="finish_att" value="1" class="btn btn-primary">Kaydet</button>
+						</div>
+					</form>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+		<?php } ?>
 
-						<?php
-						//var_dump($student_list);
-						?>
-						<table class="prog_table table table-condensed table-hover table-striped">
-						<tr>
-							<th>Numara</th><th>Ad Soyad</th><th>Bölüm</th><th>Derse Katılım</th>
-						</tr>
-						<?php
-						foreach ($student_list as $s) {
-						?>
-						<tr>
-							<td><?=$s->number;?></td>
-							<td><?=$s->user_name;?></td>
-							<td><?=$s->department_acronym.$s->department_code;?></td>
-							<td><input type="checkbox" class="att-check" name="att_data[]" data-toggle="toggle" data-on="EVET" data-off="HAYIR" data-onstyle="success" data-offstyle="default" value="<?=$s->user_id;?>"></td>
-						</tr>
-						<?php
-						}
-
-						?>
-						</table>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
-						<button type="submit" class="btn btn-primary">Kaydet</button>
-					</div>
-				</form>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
-	<script>
-	$(document).ready(function(){
-		/*$('.att-check').change(function(){
-			if( $(this).prop('checked') ){
-				$(this).val('1');
-			}else{
-				$(this).val('-1');
-			}
-		});*/
-	});
-	</script>
-	<?php
-	}
-	?>
-
-	<script>
-		for(var i=0; i<selected_courses.length; i++){
-			$(selected_courses[i].elem).val(selected_courses[i].val);
-			set_selection($(selected_courses[i].elem));
-		}
-	</script>
+		<div class="row">
+			<hr>
+			<form action="" method="post">
+				<select name="selected_course" class="form-control">
+					<option disabled selected value>Bir ders seçin...</option>
+					<?php
+					foreach ($assigned_courses as $c) {
+						echo "<option value='$c->lesson_id-$c->subclass-$c->acd_id' >" .
+						$c->department_acronym . $c->lesson_code . ' - ' . $c->lesson_name . ' - Şube: ' . $c->subclass .
+						'</option>';
+					}
+					?>
+				</select>
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
+				<div class="text-right"><br>
+					<button type="submit" class="btn btn-primary">Ders Takvimini Getir</button>
+				</div>
+			</form>
+		</div>
 
 
 	<?php
+}else{
+?>
+<div class="alert alert-warning">Henüz bir ders programınız yok.</div>
+<?php
 }
 ?>
 
@@ -305,12 +312,42 @@ $base = base_url() ."assets/" ?>
 <link href="<?=$base?>css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="<?=$base?>js/bootstrap-toggle.min.js"></script>
 
-<?php
-if(isset($student_list)){
-?>
+
+
+
 <script>
-	$('.modal').modal('show');
-</script>
-<?php
+function calendar_click(id){
+	var hasEvent = $("#" + id).data("hasEvent");
+	if(hasEvent){
+		var date = $("#" + id).data("date");
+		$('#selected-date-input').val(date);
+		$('#calendar-form').submit();
+		//alert(date);
+	}else{
+		alert('Bu tarih boş görünüyor!');
+	}
+	
 }
-?>
+
+$(document).ready(function(){
+
+	$('.modal').modal('show');
+
+	$("#att_calendar").zabuto_calendar({
+		cell_border: true,
+    today: true,
+    show_days: true,
+    weekstartson: 1,
+    /*nav_icon: {
+      prev: '<i class="fa fa-chevron-circle-left"></i>',
+      next: '<i class="fa fa-chevron-circle-right"></i>'
+    },*/
+    legend: [{type: "block", label: "Dersinizin Olduğu Gün", classname: "blue-legend"}],
+    data: <?php echo json_encode($calendar); ?>,
+    language: 'tr',
+    action: function(){
+    	calendar_click(this.id);
+    }
+	});
+});
+</script>

@@ -117,7 +117,8 @@ Class Teacher_model extends CI_Model{
 
 		$insertArray = array(
 			'course' => $params['course'],
-			'teacher' => $params['teacher']
+			'teacher' => $params['teacher'],
+			'semester' => $params['semester']
 			);
 		//$this->load->helper('special_insert');
 		$this->db->insert('assigned_courses', $insertArray);
@@ -221,7 +222,7 @@ Class Teacher_model extends CI_Model{
 		}
 	}
 
-	public function GetAssignedCourses($teacher_id){
+	public function GetAssignedCourses($teacher_id, $semester, $group_by = false){
 		$query = $this->db->select('*')
 			->from('assigned_courses')
 			->join('assigned_course_data', 'assigned_courses.assign_id = assigned_course_data.assigned_course', 'inner')
@@ -233,13 +234,16 @@ Class Teacher_model extends CI_Model{
 			->join('courses', 'assigned_courses.course = courses.lesson_id', 'inner')
 			->join('departments', 'courses.department = departments.department_id', 'inner')
 			->where('assigned_courses.teacher', $teacher_id)
+			->where('assigned_courses.semester', $semester)
 			->order_by('course', 'asc');
+			if($group_by === true){
+				$this->db->group_by(array('assigned_courses.course', 'assigned_courses.subclass'));
+			}
 
 		$result = $query->get();
-		//exit(var_dump($result));
 		return $result->result();
-
 	}
+
 
 	/*
 	SELECT *
@@ -312,12 +316,11 @@ Class Teacher_model extends CI_Model{
 		}
 	}
 
-	public function UpdateAttendance($att_list = array(), $week = -1, $day = -1, $hour = -1, $assigned_course_data = -1){
-		if(!empty($att_list) && $week != -1 && $day != -1 && $hour != -1 && $assigned_course_data != -1){
+	public function UpdateAttendance($att_list = array(), $date = -1, $hour = -1, $assigned_course_data = -1){
+		if(!empty($att_list) && $date != -1 && $hour != -1 && $assigned_course_data != -1){
 
 			//eski yoklama siliniyor
-			$this->db->where('week', $week);
-			$this->db->where('day', $day);
+			$this->db->where('date', $date);
 			$this->db->where('hour', $hour);
 			$this->db->where('assigned_course_data', $assigned_course_data);
 			$this->db->delete('attendance');
@@ -328,8 +331,7 @@ Class Teacher_model extends CI_Model{
 					$insertArray,
 					array(
 						'student_id' => $att['student_id'],
-						'week' => $week,
-						'day' => $day,
+						'date' => $date,
 						'hour' => $hour,
 						'state' => $att['state'],
 						'assigned_course_data' => $assigned_course_data
@@ -344,6 +346,66 @@ Class Teacher_model extends CI_Model{
 			return _EMPTY;
 		}
 		
+	}
+
+	public function UpdateAttendanceFromArray($att_array = array()){
+		if(!empty($att_array)){
+			//exit(var_dump($att_array));
+			$date = $att_array[0]->date;
+			$hour = $att_array[0]->hour;
+			$assigned_course_data = $att_array[0]->assigned_course_data;
+			//eski yoklama siliniyor
+			$this->db->where('date', $date);
+			$this->db->where('hour', $hour);
+			$this->db->where('assigned_course_data', $assigned_course_data);
+			$this->db->delete('attendance');
+
+			/*$insertArray = array();
+			foreach ($att_array as $att) {
+				array_push(
+					$insertArray,
+					array(
+						'student_id' => $att->student_id,
+						'date' => $date,
+						'hour' => $hour,
+						'state' => $att->state,
+						'assigned_course_data' => $assigned_course_data
+					)
+				);
+			}*/
+
+			//exit(var_dump($insertArray));
+			$this->db->insert_batch('attendance', $att_array);
+			return ($this->db->affected_rows() > 0);
+
+		}else{
+			return _EMPTY;
+		}
+		
+	}
+
+	public function GetAttendance($date = -1,  $hour = -1, $assigned_course_data = -1){
+		if($date != -1 && $hour != -1 && $assigned_course_data != -1){
+			$this->db->select('*')
+			->from('attendance')
+			->join('users','users.user_id = attendance.student_id', 'inner')
+			->join('assigned_course_data','assigned_course_data.acd_id = attendance.assigned_course_data', 'inner')
+			->join('assigned_courses','assigned_courses.assign_id = assigned_course_data.assigned_course', 'inner')
+			->join('courses','assigned_courses.course = courses.lesson_id', 'inner')
+			->where('attendance.date', $date)
+			->where('attendance.hour', $hour)
+			->where('attendance.assigned_course_data', $assigned_course_data);
+
+			$query = $this->db->get();
+			if($query->num_rows() > 0){
+				return $query->result();
+			}else{
+				return null;
+			}
+		}else{
+			return _EMPTY;
+		}
+
 	}
 	
 }

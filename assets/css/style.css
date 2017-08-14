@@ -59,7 +59,7 @@ body > .container-fluid{
 	background: #222;
 	color: #fff;
 	padding: 0;
-  background-image: url(../img/gridtile.png) !important;
+  /*background-image: url(../img/gridtile.png) !important;*/
   background-repeat: repeat;
 }
 
@@ -156,7 +156,7 @@ body > .container-fluid{
   top: 0px;
   height: auto;
   color: #fff;
-  background-image: url(../img/gridtile.png) !important;
+  /*background-image: url(../img/gridtile.png) !important;*/
   background-repeat: repeat;
 }
 .nav-side-menu a{
@@ -243,6 +243,9 @@ body > .container-fluid{
     /*border-left: 3px solid #2e353d;*/
     border-bottom: 1px solid #0c0c0c;
 
+  }
+  #menu-content li:first-child{
+    border-top: 1px solid #0c0c0c;
   }
   .nav-side-menu li a {
     text-decoration: none;
@@ -511,4 +514,41 @@ body > .container-fluid{
 .course-select option:disabled {
     color: red;
     text-decoration: line-through;
+}
+
+.calendar-day{
+  background-color: #337ab7;
+  color: #fff;
+}
+
+div.zabuto_calendar .table tr td div.day {
+  border: 1px solid #ddd;
+}
+
+div.zabuto_calendar .table tr td div.day:hover {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.side-menu-toggle-btn{
+  position: absolute;
+  right: 0;
+  top: 5%;
+  width: auto;
+  height: auto;
+  background-color: rgba(255,255,255,0.6);
+  color: #222;
+  font-size: 25px;
+  line-height: 25px;
+  padding: 5px;
+  z-index: 9999;
+  cursor: pointer;
+  display: none;
+}
+.side-menu-toggle-btn:hover{
+  background-color: rgba(255,255,255,1);
+}
+
+.blue-legend{
+  background-color: #337ab7;
 }

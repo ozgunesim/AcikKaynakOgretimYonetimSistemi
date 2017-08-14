@@ -23,6 +23,10 @@
   <!-- jQuery -->
   <script src="<?=$base?>js/jquery.min.js"></script>
 
+
+  <link rel="stylesheet" type="text/css" href="<?php echo $base; ?>css/zabuto_calendar.min.css" />
+  <script src="<?php echo $base; ?>js/zabuto_calendar.min.js"></script>
+
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -40,6 +44,7 @@
         <h3 class="text-center"><?=($this->session->userdata('user')->user_name);?></h3>
         <h5 class="text-center"><?=($this->session->userdata('user')->auth_name);?></h5>
       </div>
+      <div class="side-menu-toggle-btn hidden-sm hidden-xs"><i class="fa fa-chevron-left" aria-hidden="true"></i></div>
       <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
 
       <div class="menu-list">

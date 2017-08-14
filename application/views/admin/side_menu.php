@@ -12,7 +12,6 @@
   <a href="<?php echo site_url() . 'admin/delete_course'?>"><li>Ders Sil</li></a>
 </ul>
 
-
 <li data-toggle="collapse" data-target="#teacher" class="collapsed">
   <a href="#"><i class="fa fa-graduation-cap fa-lg"></i> Öğretmenler <span class="arrow"></span></a>
 </li>  
@@ -23,13 +22,19 @@
   <a href="<?php echo site_url() . 'admin/delete_teacher'?>"><li>Erişim Ayarları</li></a>
 </ul>
 
-
 <li data-toggle="collapse" data-target="#student" class="collapsed">
   <a href="#"><i class="fa fa-child fa-lg"></i> Öğrenciler <span class="arrow"></span></a>
 </li>
 <ul class="sub-menu collapse" id="student">
   <a href="<?php echo site_url() . 'admin/add_student'?>"><li>Öğrenci Ekle</li></a>
   <a href="<?php echo site_url() . 'admin/delete_student'?>"><li>Erişim Ayarları</li></a>
+</ul>
+
+<li data-toggle="collapse" data-target="#semester" class="collapsed">
+  <a href="#"><i class="fa fa-flag fa-lg"></i> Dönemler <span class="arrow"></span></a>
+</li>
+<ul class="sub-menu collapse" id="semester">
+  <a href="<?php echo site_url() . 'admin/add_semester'?>"><li>Eğitim/Öğretim Yarıyılı Ekle</li></a>
 </ul>
 
 <li data-toggle="collapse" data-target="#notices" class="collapsed">

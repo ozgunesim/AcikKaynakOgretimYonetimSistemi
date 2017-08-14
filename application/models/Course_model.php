@@ -21,6 +21,39 @@ Class Course_model extends CI_Model{
 		return $query->result();
 	}
 
+	public function AddSemester($start = -1, $end = -1, $courses_start = -1, $courses_end = -1, $name = ""){
+		if(!empty($name) && $start != -1 && $end != -1){
+			$insertArray = array(
+				'start_date' => $start,
+				'end_date' => $end,
+				'courses_start_date' => $courses_start,
+				'courses_end_date' => $courses_end,
+				'semester_name' => $name
+			);
+			$this->db->insert('semesters', $insertArray);
+			return ($this->db->affected_rows() > 0);
+		}else{
+			return _EMPTY;
+		}
+	}
+
+	public function GetSemesters(){
+		return $this->db->select('*')->from('semesters')->get()->result();
+	}
+
+	public function GetCurrentSemester(){
+		$query = $this->db->select('*')->from('semesters')
+		->where('start_date <= ', date('Y-m-d'))
+		->where('end_date >=', date('Y-m-d'))
+		->get();
+
+		if($query->num_rows() > 0){
+			return $query->row();
+		}else{
+			return null;
+		}
+	}
+
 	public function AddCourse($newCourse = array()){
 		if(!empty($newCourse)){
 			$this->load->model('departments_model');
@@ -77,6 +110,45 @@ Class Course_model extends CI_Model{
 			return _EMPTY;
 		}
 	}
+
+	public function GetCourseByWeeklyProgramData($p_data_id = -1){
+		if($p_data_id != -1){
+			$this->db->select('courses.*')
+			->from('weekly_program_data')
+			->join('assigned_course_data','assigned_course_data.acd_id = weekly_program_data.assigned_course_data', 'inner')
+			->join('assigned_courses', 'assigned_courses.assign_id = assigned_course_data.assigned_course', 'inner')
+			->join('courses','courses.lesson_id = assigned_courses.course','inner')
+			->where('weekly_program_data.p_data_id', $p_data_id);
+			$query = $this->db->get();
+			if($this->db->affected_rows() > 0){
+				return $query->result();
+			}else{
+				return null;
+			}
+		}else{
+			return _EMPTY;
+		}
+	}
+
+	public function GetSubclassByDay($day = -1, $user = -1, $course = -1, $subclass = -1 ){
+		if($day != -1 && $user != -1 && $course != -1 && $subclass != -1){
+			$query = $this->db->select('*')
+			->from('weekly_program_data')
+			->join('assigned_course_data','assigned_course_data.acd_id = weekly_program_data.assigned_course_data', 'inner')
+			->join('assigned_courses', 'assigned_courses.assign_id = assigned_course_data.assigned_course', 'inner')
+			->join('courses','courses.lesson_id = assigned_courses.course', 'inner')
+			->where('weekly_program_data.day', $day)
+			->where('assigned_courses.teacher', $user)
+			->where('assigned_courses.course', $course)
+			->where('assigned_courses.subclass', $subclass)
+			->get();
+			return ($query->num_rows() > 0) ? $query->result() : null;
+		}else{
+			return _EMPTY;
+		}
+	}
+
+
 	
 	
 }

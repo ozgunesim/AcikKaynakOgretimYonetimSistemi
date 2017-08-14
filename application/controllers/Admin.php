@@ -348,11 +348,13 @@ Class Admin extends CI_Controller{
 		$this->load->model('teacher_model');
 		$data['courses'] = $this->course_model->GetAllCourses();
 		$data['teachers'] = $this->teacher_model->GetAllTeachers();
+		$data['semesters'] = $this->course_model->GetSemesters();
 
 		if($this->input->post('course') != null && $this->input->post('teacher') != null){
 			//exit(var_dump($_POST));
 			$params['course'] = $this->security->xss_clean(strip_tags($this->input->post('course')));
 			$params['teacher'] = $this->security->xss_clean(strip_tags($this->input->post('teacher')));
+			$params['semester'] = $this->input->post('semester');
 			//$params['is_common'] = ($this->input->post('is_common') != null && $this->input->post('is_common') == 'on');
 			//ortak subeler icin. bu secenek henüz aktif degil.
 			
@@ -625,6 +627,32 @@ Class Admin extends CI_Controller{
 
 
 		$this->load->view('admin/settings', $data);
+	}
+
+	private function parseDate($date){
+		$date = DateTime::createFromFormat('d.m.Y', $date);
+		$date = date('Y-m-d' , strtotime($date->format('Y-m-d')));
+		return $date;
+	}
+
+	public function add_semester(){
+		if($this->input->post('start_date') != null){
+			$start = $this->parseDate($this->input->post('start_date'));
+			$end = $this->parseDate($this->input->post('end_date'));
+			$courses_start = $this->parseDate($this->input->post('courses_start_date'));
+			$courses_end = $this->parseDate($this->input->post('courses_end_date'));
+
+			$name = $this->input->post('name');
+			$this->load->model('course_model');
+			$result = $this->course_model->AddSemester($start, $end, $courses_start, $courses_end, $name);
+			if($result === true){
+				set_success_msg('Ders yarıyılı başarıyla eklendi.');
+			}else{
+				set_error_msg('Beklenmeyen hata!');
+			}
+		}
+
+		$this->load->view('admin/add_semester');
 	}
 
 

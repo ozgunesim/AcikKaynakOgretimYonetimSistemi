@@ -111,6 +111,44 @@ Class Student_model extends CI_Model{
 			return _EMPTY;
 		}
 	}
+
+	public function GetEnrolmentsByAssignedCourse($ac = -1){
+		if($ac != -1){
+			$query = $this->db->select('*')
+			->from('enrolments')
+			->join('assigned_courses', 'enrolments.assigned_course = assigned_courses.assign_id', 'inner')
+			->join('assigned_course_data', 'assigned_courses.assign_id = assigned_course_data.assigned_course', 'inner')
+			->join('users', 'users.user_id = enrolments.student', 'inner')
+			->join('courses', 'courses.lesson_id = assigned_courses.course', 'inner')
+			->where('assigned_courses.assign_id', $ac)
+			->get();
+
+			return ($query->num_rows() > 0) ? $query->result() : null;
+		}else{
+			return _EMPTY;
+		}
+	}
+
+
+	public function GetEnrolmentsByAssignedCourseData($acd_id = -1){
+		if($acd_id != -1){
+			$query = $this->db->select('*')
+			->from('enrolments')
+			->join('assigned_courses', 'enrolments.assigned_course = assigned_courses.assign_id', 'inner')
+			->join('assigned_course_data', 'assigned_courses.assign_id = assigned_course_data.assigned_course', 'inner')
+			->join('users', 'users.user_id = enrolments.student', 'inner')
+			->join('courses', 'courses.lesson_id = assigned_courses.course', 'inner')
+			->join('student_info', 'student_info.s_user_id = users.user_id', 'inner')
+			->join('departments', 'departments.department_id = student_info.department','inner')
+			->where('assigned_course_data.acd_id', $acd_id)
+			->get();
+
+			return ($query->num_rows() > 0) ? $query->result() : null;
+		}else{
+			return _EMPTY;
+		}
+	}
+
 	
 }
 ?>
