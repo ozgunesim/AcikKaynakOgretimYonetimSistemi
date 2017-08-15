@@ -349,21 +349,25 @@ Class Admin extends CI_Controller{
 		$data['courses'] = $this->course_model->GetAllCourses();
 		$data['teachers'] = $this->teacher_model->GetAllTeachers();
 		$data['semesters'] = $this->course_model->GetSemesters();
-
-		if($this->input->post('course') != null && $this->input->post('teacher') != null){
-			//exit(var_dump($_POST));
-			$params['course'] = $this->security->xss_clean(strip_tags($this->input->post('course')));
-			$params['teacher'] = $this->security->xss_clean(strip_tags($this->input->post('teacher')));
-			$params['semester'] = $this->input->post('semester');
-			//$params['is_common'] = ($this->input->post('is_common') != null && $this->input->post('is_common') == 'on');
-			//ortak subeler icin. bu secenek henüz aktif degil.
-			
-			$result = $this->teacher_model->AssignCourse($params);
-			if($result === true)
-				set_success_msg('Şube başarıyla oluşturuldu.');
-			else
-				set_error_msg($result);
+		if($this->input->post('assign_btn') != null){
+			if($this->input->post('course') != null && $this->input->post('teacher') != null && $this->input->post('semester') != null ){
+				//exit(var_dump($_POST));
+				$params['course'] = $this->security->xss_clean(strip_tags($this->input->post('course')));
+				$params['teacher'] = $this->security->xss_clean(strip_tags($this->input->post('teacher')));
+				$params['semester'] = $this->input->post('semester');
+				//$params['is_common'] = ($this->input->post('is_common') != null && $this->input->post('is_common') == 'on');
+				//ortak subeler icin. bu secenek henüz aktif degil.
+				
+				$result = $this->teacher_model->AssignCourse($params);
+				if($result === true)
+					set_success_msg('Şube başarıyla oluşturuldu.');
+				else
+					set_error_msg($result);
+			}else{
+				set_error_msg('Eksik bilgi var.');
+			}
 		}
+		
 
 		$this->load->view('admin/assign_course', $data);
 	}

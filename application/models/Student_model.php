@@ -117,11 +117,16 @@ Class Student_model extends CI_Model{
 			$query = $this->db->select('*')
 			->from('enrolments')
 			->join('assigned_courses', 'enrolments.assigned_course = assigned_courses.assign_id', 'inner')
-			->join('assigned_course_data', 'assigned_courses.assign_id = assigned_course_data.assigned_course', 'inner')
+			//->join('assigned_course_data', 'assigned_courses.assign_id = assigned_course_data.assigned_course', 'inner')
 			->join('users', 'users.user_id = enrolments.student', 'inner')
 			->join('courses', 'courses.lesson_id = assigned_courses.course', 'inner')
+			->join('student_info', 'student_info.s_user_id = users.user_id', 'inner')
+			->join('departments', 'departments.department_id = student_info.department','inner')
 			->where('assigned_courses.assign_id', $ac)
+			//->where('assigned_courses.subclass', $subclass)
 			->get();
+
+			//exit(var_dump($query));
 
 			return ($query->num_rows() > 0) ? $query->result() : null;
 		}else{

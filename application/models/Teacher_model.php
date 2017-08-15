@@ -159,7 +159,7 @@ Class Teacher_model extends CI_Model{
 			$this->db->delete('assigned_courses');
 			$result = ($this->db->affected_rows() > 0);
 			if($result === true)
-				$this->reorder_classes($temp->course, $temp->teacher);
+				$this->reorder_subclasses($temp->course, $temp->teacher);
 
 			return $result;
 		}else{
@@ -406,6 +406,84 @@ Class Teacher_model extends CI_Model{
 			return _EMPTY;
 		}
 
+	}
+
+	public function GetExams($assign_id = -1){
+		if($assign_id != -1){
+			$query = $this->db->select('*')
+			->from('exams')
+			//->join('exam_results', 'exam_results.exam = exams.exam_id', 'inner')
+			//->join('users', 'exam_results.student = users.user_id', 'inner')
+			->where('exams.assigned_course', $assign_id)
+			->get();
+			if($query->num_rows() > 0){
+				return $query->result();
+			}else{
+				return null;
+			}
+		}else{
+			return _EMPTY;
+		}
+	}
+
+	public function GetResults($exam_id = -1){
+		if($exam_id != -1){
+			$query = $this->db->select('*')
+			->from('exams')
+			->join('exam_results', 'exam_results.exam = exams.exam_id', 'inner')
+			->join('users', 'exam_results.student = users.user_id', 'inner')
+			->join('student_info','student_info.s_user_id = users.user_id','inner')
+			->join('departments','departments.department_id = student_info.department','inner')
+			->where('exams.exam_id', $exam_id)
+			->get();
+			if($query->num_rows() > 0){
+				return $query->result();
+			}else{
+				return null;
+			}
+		}else{
+			return _EMPTY;
+		}
+	}
+
+	public function SaveExam($assign_id = -1, $name = "", $exam_array = array(), $update_id = -1){
+		if($assign_id != -1 && !empty($name) && !empty($exam_array)){
+			if($update_id != -1){
+				$this->db->where('exam_id', $update_id);
+				$this->db->delete('exams');
+			}
+			//exit("exam name: $name  |  acd: $assign_id");
+			$this->db->insert('exams', array(
+				'exam_name' => $name,
+				'assigned_course' => $assign_id
+			));
+			$insert_id = $this->db->insert_id();
+			$exam_result_array = array();
+			foreach ($exam_array as $key => $value) {
+				$ex = array(
+					'exam' => $insert_id,
+					'student' => $key,
+					'result' => $value
+				);
+				array_push($exam_result_array, $ex);
+			}
+			$this->db->insert_batch('exam_results', $exam_result_array);
+			return ($this->db->affected_rows() > 0);
+		}else{
+			return _EMPTY;
+		}
+	}
+
+	public function WaitingMsgCount($user_id = -1){
+		if($user_id != -1){
+			return $this->db->select('count(*) as total')
+			->from('messages')
+			->where('receiver', $user_id)
+			->where('state','1')
+			->get()->row()->total;
+		}else{
+			return _EMPTY;
+		}
 	}
 	
 }

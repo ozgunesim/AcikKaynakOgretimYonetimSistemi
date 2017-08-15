@@ -2,9 +2,6 @@
 <h2 class="page-title">Yoklama Gir</h2>
 
 <script>
-
-	var selected_courses = [];
-
 	function goToByScroll(id){
     //id = id.replace("link", "");
     // Scroll
@@ -12,85 +9,6 @@
         scrollTop: ($("#"+id).offset().top + $('#'+id).height())},
         'slow');
 	}
-
-
-	function set_selection(elem){
-		var index = $(elem).prop('selectedIndex');
-		if(index != 0){
-			$('.course-select').not(elem).find('option:eq(' + index + ')').attr('disabled','disabled');
-			$(elem).attr('data-selection', index);
-
-			var txt = $(elem).find('option:eq(' + index + ')').text();
-			$(elem).hide();
-			$(elem).next().show().html('<i class="fa fa-times"></i> ' + txt);
-		}
-	}
-
-	function clear_selected(elem){
-		$(elem).hide();
-		$(elem).prev().show();
-		$(elem).prev().prop('selectedIndex', 0);
-		var selected = $(elem).prev().attr('data-selection');
-		$('.course-select').find('option:eq(' + selected + ')').removeAttr('disabled');
-	}
-
-	$(document).ready(function(){
-		$('.clear-select').click(function(){
-			$('select option').eq(0).prop('selected', true);
-		});
-		$('.clear-name').click(function(){
-			$('input[name=course_name]').val('');
-		});
-		$('.clear-optic').click(function(){
-			$('input[name=optic]').val('');
-		});
-		$('button[name=course_id]').click(function(){
-			$('.modal').modal('show');
-		});
-		/*$('select').change(function(){
-			$(this).css('color', $(this).find( "option:selected" ).css('background-color'));
-		}); ?>*/
-
-
-		$('.course-select').change(function(){
-			set_selection($(this));
-			/*var index = $(this).prop('selectedIndex');
-			if(index != 0){
-				$('.course-select').not(this).find('option:eq(' + index + ')').attr('disabled','disabled');
-				$(this).attr('data-selection', index);
-
-				var txt = $(this).find('option:eq(' + index + ')').text();
-				$(this).hide();
-				$(this).next().show().html('<i class="fa fa-times"></i> ' + txt);
-			}*/
-			
-		});
-
-		$('.clear-class').click(function(){
-			clear_selected($(this));
-			/*$(this).hide();
-			$(this).prev().show();
-			$(this).prev().prop('selectedIndex', 0);
-			var selected = $(this).prev().attr('data-selection');
-			$('.course-select').find('option:eq(' + selected + ')').removeAttr('disabled');*/
-		});
-
-
-		$('#wp-toggle-menu').click(function(){
-			$('.left-side').toggleClass('hidden');
-			$('.main-container').toggleClass('col-md-10').toggleClass('col-md-12');
-			$(this).find('span').toggleClass('hidden');
-		});
-
-
-		$('#new-search').click(function(){
-			$('select option').eq(0).prop('selected', true);
-			var csrf = $('input[name=<?php echo $this->security->get_csrf_token_name(); ?>').val();
-			$('input').val('');
-			$('input[name=<?php echo $this->security->get_csrf_token_name(); ?>').val(csrf);
-			$('button[name=search_btn]').click();
-		});
-	});
 </script>
 
 
@@ -201,66 +119,75 @@
 
 
 		<?php if(isset($ready_to_att)){
-		?>
-					<form action="" method="post">
-						<input type="hidden" name="date" value="<?=$att_data->date;?>">
-						<input type="hidden" name="hour" value="<?=$att_data->hour;?>">
-						<input type="hidden" name="acd_id" value="<?=$att_data->acd_id;?>">
-						<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
-						<div class="modal-header">
-							<h4 class="modal-title">Yoklama Girin:</h4>
+			$this->load->config('config');
+			$force_date = $this->config->item('force_attendance_date');
+			if($att_data->date <= date('Y-m-d') || !$force_date){
+			?>
+			<form action="" method="post">
+				<input type="hidden" name="date" value="<?=$att_data->date;?>">
+				<input type="hidden" name="hour" value="<?=$att_data->hour;?>">
+				<input type="hidden" name="acd_id" value="<?=$att_data->acd_id;?>">
+				<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
+				<?php
+				if(!isset($enrolments) || empty($enrolments)){
+				?>
+					<div class="alert alert-warning">Bu derse henüz öğrenci kayıt olmamış.</div>
+				<?php
+				}else{
+				?>
+					<div class="row">
+						<div class="col-xs-6">
+							<h4><strong class="text-info">Tarih:</strong> <?=$att_data->date;?></h4>
 						</div>
-						<div class="modal-body">
-							<?php
-							if(!isset($enrolments) || empty($enrolments)){
-							?>
-							<div class="alert alert-warning">Bu derse henüz öğrenci kayıt olmamış.</div>
-							<?php
-							}else{
-							?>
+						<div class="col-xs-6">
+							<h4><strong class="text-info">Saat:</strong> <?=$att_data->hour;?></h4>
+						</div>
+					</div><hr>
 
-
-							<table class="table table-striped">
-							<tr>
-								<th>Numara</th><th>Ad Soyad</th><th>Bölüm</th><th>Katılım?</th>
-							</tr>
-							<?php
-							//var_dump($current_attendance);
-							foreach ($enrolments as $enr) {
-								echo '<tr>';
-								echo printCell($enr->number);
-								echo printCell($enr->user_name);
-								echo printCell($enr->department_acronym.$enr->department_code);
-								$checked = "";
-								if(isset($current_attendance) && $current_attendance != null){
-									foreach ($current_attendance as $cur_att) {
-										if($cur_att->student_id == $enr->user_id && $cur_att->state === '1'){
-											$checked = "checked";
-											break 1;
-										}
-									}
+					<table class="table table-striped">
+					<tr>
+						<th>Numara</th><th>Ad Soyad</th><th>Bölüm</th><th class="text-right">Katılım?</th>
+					</tr>
+					<?php
+					//var_dump($current_attendance);
+					foreach ($enrolments as $enr) {
+						echo '<tr>';
+						echo printCell($enr->number);
+						echo printCell($enr->user_name);
+						echo printCell($enr->department_acronym.$enr->department_code);
+						$checked = "";
+						if(isset($current_attendance) && $current_attendance != null){
+							foreach ($current_attendance as $cur_att) {
+								if($cur_att->student_id == $enr->user_id && $cur_att->state === '1'){
+									$checked = "checked";
+									break 1;
 								}
-								echo printCell('<input type="checkbox" ' . $checked . ' data-width="100" name="att_check[]" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-on="BURADA" data-off="YOK" value="' . $enr->user_id . '">');
-								echo '</tr>';
 							}
-							?>
-							</table>
+						}
+						echo printCell('<div class="text-right"><input type="checkbox" ' . $checked . ' data-width="100" name="att_check[]" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-on="BURADA" data-off="YOK" value="' . $enr->user_id . '"></div>');
+						echo '</tr>';
+					}
+					?>
+					</table>
 
 
-							<?php
-							}
-							?>
-							
-
-
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" id="close-window" data-dismiss="modal">Vazgeç</button>
-							<button type="submit" name="finish_att" value="1" class="btn btn-primary">Kaydet</button>
-						</div>
-					</form>
-
-
+				<?php
+				}
+				?>
+				<hr>
+				<div class="text-right">
+					<button type="button" class="btn btn-default" id="close-window" data-dismiss="modal">Vazgeç</button>
+					<button type="submit" name="finish_att" value="1" class="btn btn-primary">Kaydet</button>
+				</div>
+			</form>
+			<?php
+			}else{
+			?>
+				<div class="alert alert-danger text-center"><h3>İleri bir tarihe yoklama alamazsınız!</h3></div>
+			<?php
+			}
+		?>
+				
 		<?php } ?>
 
 		<div class="row" id="select-course-row">
@@ -285,13 +212,8 @@
 
 
 	<?php
-}else{
-?>
-<div class="alert alert-warning">Henüz bir ders programınız yok.</div>
-<?php
-}
-?>
-
+	}
+	?>
 </div>
 
 

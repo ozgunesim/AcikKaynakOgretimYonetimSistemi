@@ -97,7 +97,7 @@
 			<div class="col-md-offset-4 col-md-4">
 				<div class="col-md-12 text-center text-info"><hr><strong>Atanan her ders yeni bir şubedir. Şube eklemek için dersi ve hocayı seçerek tekrar atama yapın.</strong><hr></div>
 				<div class="col-md-12 text-center text-info">Dersin günü ve saatini öğretmen belirleyecektir.</div>
-				<button type="submit" name="search_btn" value="1" class="btn btn-primary btn-block"><i class="fa fa-link"></i> Ders Ata</button><br>
+				<button type="submit" name="assign_btn" value="1" class="btn btn-primary btn-block"><i class="fa fa-link"></i> Ders Ata</button><br>
 			</div><br>
 		</div>
 	</form>

@@ -10,7 +10,7 @@
 <ul class="sub-menu collapse" id="courses">
   <a href="<?php echo site_url() . 'teacher/weekly_programs'?>"><li>Ders Programı Belirle</li></a>
   <a href="<?php echo site_url() . 'teacher/attendance'?>"><li>Yoklama Gir</li></a>
-  <a href="<?php echo site_url() . 'admin/add_course'?>"><li>Sınav Sonucu Açıkla</li></a>
+  <a href="<?php echo site_url() . 'teacher/add_exam'?>"><li>Sınav Sonucu Gir/Düzenle</li></a>
   <a href="<?php echo site_url() . 'admin/add_course'?>"><li>Başarı Durumu</li></a>
 </ul>
 
@@ -23,8 +23,8 @@
 </ul-->
 
 <li>
-  <a href="<?php echo site_url() . 'user/settings'?>">
-    <i class="fa fa-comments fa-lg"></i> Sorular <strong>(0)</strong>
+  <a href="<?php echo site_url() . 'teacher/messages'?>">
+    <i class="fa fa-comments fa-lg"></i> Mesajlar <strong>(<?=$msg_count;?>)</strong>
   </a>
 </li>
 

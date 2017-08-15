@@ -37,7 +37,7 @@
 							printCell($s->user_name);
 							printCell($s->lesson_name);
 							printCell($s->lesson_code);
-							printCell($s->class);
+							printCell($s->subclass);
 							printCell($s->department_acronym.$s->department_code);
 							printCell($s->theoric_hours);
 							printCell($s->practice_hours);

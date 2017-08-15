@@ -552,3 +552,12 @@ div.zabuto_calendar .table tr td div.day:hover {
 .blue-legend{
   background-color: #337ab7;
 }
+
+.messages-left{
+  max-height: 100%;
+  width: 100%;
+  background-color: #222;
+  color: #fff;
+  overflow-x: hidden;
+  overflow-y: auto;
+}

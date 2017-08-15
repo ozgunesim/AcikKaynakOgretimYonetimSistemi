@@ -551,6 +551,29 @@ $config['enable_captcha'] = FALSE;
 $config['enable_email_activation'] = FALSE;
 
 
+/*
+|--------------------------------------------------------------------------
+| HACETTEPE MAIL ZORUNLULUGU
+|--------------------------------------------------------------------------
+|
+| Email üzerinden üyelik aktivasyonu kontrolu yapiliyorsa email
+| sunucusunun hacettepenin olmasini sart kosar.
+|
+*/
+$config['force_hacettepe_email'] = FALSE;
+
+
+/*
+|--------------------------------------------------------------------------
+| ILERI TARIHE YOKLAMA ALMA
+|--------------------------------------------------------------------------
+|
+| Yoklama alinirken ileri tarihe yoklama verisi gimeyi
+| engeller.
+|
+*/
+$config['force_attendance_date'] = FALSE;
+
 
 /* CSRF ISTISNALARI */
 if (stripos($_SERVER["REQUEST_URI"],'/teacher/attendance') === FALSE) {
