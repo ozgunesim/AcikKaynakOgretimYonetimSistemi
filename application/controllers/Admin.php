@@ -120,6 +120,7 @@ Class Admin extends CI_Controller{
 					}else{
 						set_error_msg($result);
 					}
+					//exit(var_dump($result));
 				}else{
 					set_error_msg('Girilen bilgilerde hata var!');
 				}
@@ -451,9 +452,9 @@ Class Admin extends CI_Controller{
 					$newCourse['theoric'] = (int)$this->input->post('theoric');
 					$newCourse['practice'] = (int)$this->input->post('practice');
 					$newCourse['akts'] = (int)$this->input->post('akts');
-					$newCourse['weeks'] = (int)$this->input->post('weeks');
-					$ymd = DateTime::createFromFormat('d.m.Y', $this->input->post('start_date'));
-					$newCourse['start_date'] = date('Y-m-d' , strtotime($ymd->format('Y-m-d')));
+					//$newCourse['weeks'] = (int)$this->input->post('weeks');
+					//$ymd = DateTime::createFromFormat('d.m.Y', $this->input->post('start_date'));
+					//$newCourse['start_date'] = date('Y-m-d' , strtotime($ymd->format('Y-m-d')));
 				}catch(Exception $e){
 					set_error_msg('Hatalı girdi var!');
 					$isValidInput = false;
@@ -469,8 +470,7 @@ Class Admin extends CI_Controller{
 					is_int($newCourse['practice']) &&
 					$newCourse['practice'] < 10 &&
 					$newCourse['practice'] > 0 &&
-					is_int($newCourse['akts']) &&
-					is_int($newCourse['weeks']))
+					is_int($newCourse['akts']))
 				{
 					$this->load->model('course_model');
 					$result = $this->course_model->AddCourse($newCourse);

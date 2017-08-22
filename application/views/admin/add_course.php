@@ -24,12 +24,6 @@
 	<label style="display: block;">Dersin Adı:
 		<input type="text" required name="name" class="form-control" />
 	</label><br>
-	<label style="display: block;">Hafta Sayısı:
-		<input type="text" required  pattern="\d*" placeholder="yalnızca rakam" value="13" name="weeks" class="form-control" />
-	</label><br>
-	<label style="display: block;">Dersin Başlangıç Tarihi:
-		<input class="datepicker form-control" required name="start_date" />
-	</label><br>
 	<script>
 		$('.datepicker').datepicker({
 			language: "tr"

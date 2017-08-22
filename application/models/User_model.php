@@ -60,8 +60,8 @@ Class User_model extends CI_Model{
 			'isActive' => $isActive
 			);
 
-		$inserted = special_insert('users',$insertArray);
-		if($inserted === true){
+		$this->db->insert('users',$insertArray);
+		if($this->db->affected_rows() > 0){
 			$id = $this->db->insert_id();
 			if($auth == 2){
 				$dep = $this->getDeptID($departments, $u->department);
@@ -74,8 +74,8 @@ Class User_model extends CI_Model{
 					'department' => $dep
 					);
 				//$this->db->insert('teacher_info', $infoArray);
-				return special_insert('teacher_info', $infoArray);
-				//return true;
+				$this->db->insert('teacher_info', $infoArray);
+				return ($this->db->affected_rows() > 0);
 			}else if($auth == 3){
 				$dep = $this->getDeptID($departments, $u->department);
 				if($dep == null)
@@ -86,13 +86,14 @@ Class User_model extends CI_Model{
 					'department' => $dep
 					);
 				//$this->db->insert('student_info', $infoArray);
-				return special_insert('student_info', $infoArray);
+				$this->db->insert('student_info', $infoArray);
+				return ($this->db->affected_rows() > 0);
 				//return true;
 			}else{
 				return('auth hatası');
 			}
 		}else{
-			return($inserted);
+			return "beklenmeyen hata! böyle bir kullanıcı zaten kayıtlı olabilir.";
 		}
 	}
 

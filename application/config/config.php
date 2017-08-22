@@ -576,7 +576,7 @@ $config['force_attendance_date'] = FALSE;
 
 
 /* CSRF ISTISNALARI */
-if (stripos($_SERVER["REQUEST_URI"],'/teacher/attendance') === FALSE) {
+if (stripos($_SERVER["REQUEST_URI"],'/teacher/attendance') === FALSE && stripos($_SERVER["REQUEST_URI"],'/teacher/messages') === FALSE ) {
 	$config['csrf_protection'] 	= TRUE;
 }else{ 
 $config['csrf_protection'] 	= FALSE; 

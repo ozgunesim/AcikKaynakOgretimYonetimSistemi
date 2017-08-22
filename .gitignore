@@ -9,6 +9,11 @@ application/logs/*
 !application/logs/.htaccess
 
 composer.lock
+acik_kaynak_teknolojileri.txt
+db_semasi.JPG
+db_semasi.jpg
+deneme_hesaplari.txt
+OGRENCI_KISISEL_BILGILERI.txt
 
 user_guide_src/build/*
 user_guide_src/cilexer/build/*

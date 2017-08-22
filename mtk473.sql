@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 06, 2017 at 12:32 PM
+-- Generation Time: Aug 17, 2017 at 12:30 PM
 -- Server version: 10.1.19-MariaDB
 -- PHP Version: 5.6.28
 
@@ -21,6 +21,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `mtk473`
 --
+CREATE DATABASE IF NOT EXISTS `mtk473` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `mtk473`;
 
 -- --------------------------------------------------------
 
@@ -36,14 +38,52 @@ CREATE TABLE `activation_codes` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `assigned_course_data`
+--
+
+CREATE TABLE `assigned_course_data` (
+  `acd_id` int(11) NOT NULL,
+  `assigned_course` int(11) NOT NULL,
+  `type` char(1) NOT NULL COMMENT '1: teorik ; 2: pratik'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `assigned_course_data`
+--
+
+INSERT INTO `assigned_course_data` (`acd_id`, `assigned_course`, `type`) VALUES
+(57, 45, '1'),
+(58, 45, '1'),
+(59, 45, '1'),
+(60, 45, '2'),
+(61, 45, '2'),
+(62, 46, '1'),
+(63, 46, '1'),
+(64, 46, '1'),
+(65, 46, '2'),
+(66, 46, '2');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `assigned_courses`
 --
 
 CREATE TABLE `assigned_courses` (
   `assign_id` int(11) NOT NULL,
   `course` int(11) NOT NULL,
-  `teacher` int(11) NOT NULL
+  `teacher` int(11) NOT NULL,
+  `subclass` int(11) NOT NULL COMMENT 'ders subesi anlamina geliyor. 0 ise ortak sinif.',
+  `semester` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `assigned_courses`
+--
+
+INSERT INTO `assigned_courses` (`assign_id`, `course`, `teacher`, `subclass`, `semester`) VALUES
+(45, 14, 128, 1, 4),
+(46, 14, 128, 2, 4);
 
 -- --------------------------------------------------------
 
@@ -54,9 +94,31 @@ CREATE TABLE `assigned_courses` (
 CREATE TABLE `attendance` (
   `att_id` int(11) NOT NULL,
   `student_id` int(11) NOT NULL,
-  `week` int(11) NOT NULL,
-  `state` tinyint(1) NOT NULL DEFAULT '0'
+  `date` date NOT NULL,
+  `hour` time NOT NULL,
+  `state` char(1) NOT NULL DEFAULT '0',
+  `assigned_course_data` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `attendance`
+--
+
+INSERT INTO `attendance` (`att_id`, `student_id`, `date`, `hour`, `state`, `assigned_course_data`) VALUES
+(72, 130, '2017-09-18', '13:00:00', '0', 60),
+(73, 88, '2017-09-18', '13:00:00', '0', 60),
+(74, 78, '2017-09-18', '13:00:00', '0', 60),
+(75, 81, '2017-09-18', '13:00:00', '1', 60),
+(76, 79, '2017-09-18', '13:00:00', '1', 60),
+(77, 127, '2017-09-18', '13:00:00', '1', 60),
+(78, 89, '2017-09-18', '13:00:00', '0', 60),
+(79, 83, '2017-09-18', '13:00:00', '1', 60),
+(80, 82, '2017-09-18', '13:00:00', '1', 60),
+(81, 91, '2017-09-18', '13:00:00', '1', 60),
+(82, 77, '2017-09-18', '13:00:00', '1', 60),
+(83, 80, '2017-09-18', '13:00:00', '0', 60),
+(84, 84, '2017-09-18', '13:00:00', '1', 60),
+(85, 90, '2017-09-18', '13:00:00', '1', 60);
 
 -- --------------------------------------------------------
 
@@ -88,9 +150,9 @@ CREATE TABLE `courses` (
   `lesson_id` int(11) NOT NULL,
   `lesson_code` char(3) NOT NULL,
   `lesson_name` varchar(120) NOT NULL,
-  `practice_hours` int(11) NOT NULL,
-  `theoric_hours` int(11) NOT NULL,
-  `akts` int(11) NOT NULL,
+  `practice_hours` tinyint(4) NOT NULL,
+  `theoric_hours` tinyint(4) NOT NULL,
+  `akts` tinyint(4) NOT NULL,
   `department` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -99,8 +161,9 @@ CREATE TABLE `courses` (
 --
 
 INSERT INTO `courses` (`lesson_id`, `lesson_code`, `lesson_name`, `practice_hours`, `theoric_hours`, `akts`, `department`) VALUES
-(13, '222', 'özgün bilimi', 2, 3, 5, 18),
-(14, '223', 'özgün bilimi 2', 2, 3, 5, 18);
+(14, '223', 'özgün bilimi 2', 2, 3, 5, 18),
+(15, '654', 'zaaaxdxd', 3, 3, 6, 1),
+(16, '421', 'denemeeee', 2, 3, 5, 16);
 
 -- --------------------------------------------------------
 
@@ -289,6 +352,73 @@ CREATE TABLE `enrolments` (
   `assigned_course` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `enrolments`
+--
+
+INSERT INTO `enrolments` (`enrol_id`, `student`, `assigned_course`) VALUES
+(2, 130, 45),
+(3, 88, 45),
+(4, 78, 45),
+(5, 81, 45),
+(6, 79, 45),
+(7, 127, 45),
+(8, 89, 45),
+(9, 83, 45),
+(10, 82, 45),
+(11, 91, 45),
+(12, 77, 45),
+(13, 80, 45),
+(14, 84, 45),
+(15, 90, 45);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `exam_results`
+--
+
+CREATE TABLE `exam_results` (
+  `result_id` int(11) NOT NULL,
+  `exam` int(11) NOT NULL,
+  `student` int(11) NOT NULL,
+  `result` tinyint(4) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `exam_results`
+--
+
+INSERT INTO `exam_results` (`result_id`, `exam`, `student`, `result`) VALUES
+(85, 7, 130, 100),
+(86, 7, 88, 45),
+(87, 7, 78, 3),
+(88, 7, 81, 5),
+(89, 7, 79, 3),
+(90, 7, 127, 5),
+(91, 7, 89, 6),
+(92, 7, 83, 100),
+(93, 7, 82, 3),
+(94, 7, 91, 5),
+(95, 7, 77, 6),
+(96, 7, 80, 5),
+(97, 7, 84, 3),
+(98, 7, 90, 100),
+(99, 8, 130, 0),
+(100, 8, 88, 0),
+(101, 8, 78, 0),
+(102, 8, 81, 0),
+(103, 8, 79, 0),
+(104, 8, 127, 0),
+(105, 8, 89, 0),
+(106, 8, 83, 0),
+(107, 8, 82, 0),
+(108, 8, 91, 0),
+(109, 8, 77, 0),
+(110, 8, 80, 0),
+(111, 8, 84, 0),
+(112, 8, 90, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -301,17 +431,13 @@ CREATE TABLE `exams` (
   `assigned_course` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `exam_results`
+-- Dumping data for table `exams`
 --
 
-CREATE TABLE `exam_results` (
-  `result_id` int(11) NOT NULL,
-  `exam` int(11) NOT NULL,
-  `student` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `exams` (`exam_id`, `exam_name`, `assigned_course`) VALUES
+(7, 'deneme sınav', 45),
+(8, 'gsdghsdhds', 45);
 
 -- --------------------------------------------------------
 
@@ -338,6 +464,30 @@ INSERT INTO `honours` (`honour_id`, `honour_name`) VALUES
 (8, 'Okutman'),
 (9, 'Öğretim Görevlisi'),
 (10, 'Uzman');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `messages`
+--
+
+CREATE TABLE `messages` (
+  `message_id` int(11) NOT NULL,
+  `sender` int(11) NOT NULL,
+  `receiver` int(11) NOT NULL,
+  `message_content` varchar(400) NOT NULL,
+  `state` char(1) NOT NULL DEFAULT '1' COMMENT '1:okunmadi | 0:okundu',
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `messages`
+--
+
+INSERT INTO `messages` (`message_id`, `sender`, `receiver`, `message_content`, `state`, `timestamp`) VALUES
+(1, 88, 128, 'deneme mesajı', '1', '2017-08-01 15:45:57'),
+(2, 89, 128, 'asfasfafa', '1', '2017-08-14 15:45:57'),
+(3, 128, 89, 'bbbbbbbbbb', '1', '2017-08-15 15:45:57');
 
 -- --------------------------------------------------------
 
@@ -377,6 +527,28 @@ CREATE TABLE `questions` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `semesters`
+--
+
+CREATE TABLE `semesters` (
+  `semester_id` int(11) NOT NULL,
+  `start_date` date NOT NULL,
+  `courses_start_date` date NOT NULL,
+  `courses_end_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `semester_name` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `semesters`
+--
+
+INSERT INTO `semesters` (`semester_id`, `start_date`, `courses_start_date`, `courses_end_date`, `end_date`, `semester_name`) VALUES
+(4, '2017-08-03', '2017-09-11', '2018-01-12', '2018-01-26', '2017 - 2018 Güz Dönemi');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `student_info`
 --
 
@@ -407,7 +579,8 @@ INSERT INTO `student_info` (`s_user_id`, `number`, `department`) VALUES
 (90, '21608491', 77),
 (91, '29952129', 158),
 (92, '29960124', 158),
-(127, '21420864', 108);
+(127, '21420864', 108),
+(130, '23333232', 6);
 
 -- --------------------------------------------------------
 
@@ -427,7 +600,8 @@ CREATE TABLE `teacher_info` (
 --
 
 INSERT INTO `teacher_info` (`t_user_id`, `biography`, `honour`, `department`) VALUES
-(97, 'deneme bio', 1, 9);
+(128, 'özgeçmiş deneme', 9, 18),
+(129, 'proffffffff', 3, 18);
 
 -- --------------------------------------------------------
 
@@ -466,7 +640,40 @@ INSERT INTO `users` (`user_id`, `user_mail`, `user_pw`, `user_auth`, `user_name`
 (91, 'ggzderdogan@gmail.com', 'c21f969b5f03d33d43e04f8f136e7682', 3, 'GÖZDE ERDOĞAN', '1'),
 (92, 'koray.danisma@gmail.com', 'c21f969b5f03d33d43e04f8f136e7682', 3, 'KORAY SEYFULLAH DANIŞMA', '1'),
 (97, 'ozgunesim@gmail.com', 'c21f969b5f03d33d43e04f8f136e7682', 1, 'Salazar Slytherin', '0'),
-(127, 'ethem.ilhan@hacettepe.edu.tr', 'c21f969b5f03d33d43e04f8f136e7682', 3, 'ETHEM EMİR İLHAN', '1');
+(127, 'ethem.ilhan@hacettepe.edu.tr', 'c21f969b5f03d33d43e04f8f136e7682', 3, 'ETHEM EMİR İLHAN', '1'),
+(128, 'ogretmen@deneme.com', 'c21f969b5f03d33d43e04f8f136e7682', 2, 'Deneme ÖĞRETMEN', '1'),
+(129, 'deneme@ogretmen.com', 'c21f969b5f03d33d43e04f8f136e7682', 2, 'deneme ogretmen 2', '1'),
+(130, 'ogrenci@deneme.com', 'c21f969b5f03d33d43e04f8f136e7682', 3, 'Deneme ÖĞRENCİ', '1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `weekly_program_data`
+--
+
+CREATE TABLE `weekly_program_data` (
+  `p_data_id` int(11) NOT NULL,
+  `program` int(11) NOT NULL,
+  `day` int(11) NOT NULL,
+  `hour` int(11) NOT NULL,
+  `assigned_course_data` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `weekly_program_data`
+--
+
+INSERT INTO `weekly_program_data` (`p_data_id`, `program`, `day`, `hour`, `assigned_course_data`) VALUES
+(150, 22, 0, 0, 57),
+(151, 22, 0, 1, 58),
+(152, 22, 0, 4, 60),
+(153, 22, 0, 5, 61),
+(154, 22, 2, 1, 62),
+(155, 22, 2, 2, 63),
+(156, 22, 2, 3, 64),
+(157, 22, 2, 5, 65),
+(158, 22, 2, 6, 66),
+(159, 22, 4, 3, 59);
 
 -- --------------------------------------------------------
 
@@ -476,12 +683,15 @@ INSERT INTO `users` (`user_id`, `user_mail`, `user_pw`, `user_auth`, `user_name`
 
 CREATE TABLE `weekly_programs` (
   `prog_id` int(11) NOT NULL,
-  `lesson` int(11) NOT NULL,
-  `day` int(11) NOT NULL,
-  `start_time` time NOT NULL,
-  `end_time` time NOT NULL,
-  `week_count` int(11) NOT NULL DEFAULT '12'
+  `teacher` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `weekly_programs`
+--
+
+INSERT INTO `weekly_programs` (`prog_id`, `teacher`) VALUES
+(22, 128);
 
 --
 -- Indexes for dumped tables
@@ -494,19 +704,28 @@ ALTER TABLE `activation_codes`
   ADD KEY `user` (`user`);
 
 --
+-- Indexes for table `assigned_course_data`
+--
+ALTER TABLE `assigned_course_data`
+  ADD PRIMARY KEY (`acd_id`),
+  ADD KEY `assigned_course` (`assigned_course`);
+
+--
 -- Indexes for table `assigned_courses`
 --
 ALTER TABLE `assigned_courses`
   ADD PRIMARY KEY (`assign_id`),
   ADD KEY `lesson` (`course`),
-  ADD KEY `teacher` (`teacher`);
+  ADD KEY `teacher` (`teacher`),
+  ADD KEY `semester` (`semester`);
 
 --
 -- Indexes for table `attendance`
 --
 ALTER TABLE `attendance`
   ADD PRIMARY KEY (`att_id`),
-  ADD KEY `student_id` (`student_id`);
+  ADD KEY `student_id` (`student_id`),
+  ADD KEY `assigned_course_data` (`assigned_course_data`);
 
 --
 -- Indexes for table `auths`
@@ -537,13 +756,6 @@ ALTER TABLE `enrolments`
   ADD KEY `assigned_course` (`assigned_course`);
 
 --
--- Indexes for table `exams`
---
-ALTER TABLE `exams`
-  ADD PRIMARY KEY (`exam_id`),
-  ADD KEY `assigned_course` (`assigned_course`);
-
---
 -- Indexes for table `exam_results`
 --
 ALTER TABLE `exam_results`
@@ -552,10 +764,25 @@ ALTER TABLE `exam_results`
   ADD KEY `student` (`student`);
 
 --
+-- Indexes for table `exams`
+--
+ALTER TABLE `exams`
+  ADD PRIMARY KEY (`exam_id`),
+  ADD KEY `assigned_course` (`assigned_course`);
+
+--
 -- Indexes for table `honours`
 --
 ALTER TABLE `honours`
   ADD PRIMARY KEY (`honour_id`);
+
+--
+-- Indexes for table `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`message_id`),
+  ADD KEY `sender` (`sender`),
+  ADD KEY `receiver` (`receiver`);
 
 --
 -- Indexes for table `notices`
@@ -571,6 +798,12 @@ ALTER TABLE `questions`
   ADD PRIMARY KEY (`question_id`),
   ADD KEY `teacher` (`teacher`),
   ADD KEY `student` (`student`);
+
+--
+-- Indexes for table `semesters`
+--
+ALTER TABLE `semesters`
+  ADD PRIMARY KEY (`semester_id`);
 
 --
 -- Indexes for table `student_info`
@@ -596,21 +829,39 @@ ALTER TABLE `users`
   ADD KEY `user_auth` (`user_auth`);
 
 --
+-- Indexes for table `weekly_program_data`
+--
+ALTER TABLE `weekly_program_data`
+  ADD PRIMARY KEY (`p_data_id`),
+  ADD KEY `assigned_course` (`program`),
+  ADD KEY `assigned_course_2` (`assigned_course_data`);
+
+--
 -- Indexes for table `weekly_programs`
 --
 ALTER TABLE `weekly_programs`
   ADD PRIMARY KEY (`prog_id`),
-  ADD KEY `lesson` (`lesson`);
+  ADD KEY `lesson` (`teacher`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
+-- AUTO_INCREMENT for table `assigned_course_data`
+--
+ALTER TABLE `assigned_course_data`
+  MODIFY `acd_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+--
+-- AUTO_INCREMENT for table `assigned_courses`
+--
+ALTER TABLE `assigned_courses`
+  MODIFY `assign_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+--
 -- AUTO_INCREMENT for table `attendance`
 --
 ALTER TABLE `attendance`
-  MODIFY `att_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `att_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 --
 -- AUTO_INCREMENT for table `auths`
 --
@@ -620,7 +871,7 @@ ALTER TABLE `auths`
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `lesson_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `lesson_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT for table `departments`
 --
@@ -630,22 +881,27 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `enrolments`
 --
 ALTER TABLE `enrolments`
-  MODIFY `enrol_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `exams`
---
-ALTER TABLE `exams`
-  MODIFY `exam_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `enrol_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `exam_results`
 --
 ALTER TABLE `exam_results`
-  MODIFY `result_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `result_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
+--
+-- AUTO_INCREMENT for table `exams`
+--
+ALTER TABLE `exams`
+  MODIFY `exam_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `honours`
 --
 ALTER TABLE `honours`
   MODIFY `honour_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+--
+-- AUTO_INCREMENT for table `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `notices`
 --
@@ -657,15 +913,25 @@ ALTER TABLE `notices`
 ALTER TABLE `questions`
   MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT;
 --
+-- AUTO_INCREMENT for table `semesters`
+--
+ALTER TABLE `semesters`
+  MODIFY `semester_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=128;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+--
+-- AUTO_INCREMENT for table `weekly_program_data`
+--
+ALTER TABLE `weekly_program_data`
+  MODIFY `p_data_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=160;
 --
 -- AUTO_INCREMENT for table `weekly_programs`
 --
 ALTER TABLE `weekly_programs`
-  MODIFY `prog_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `prog_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 --
 -- Constraints for dumped tables
 --
@@ -677,18 +943,25 @@ ALTER TABLE `activation_codes`
   ADD CONSTRAINT `activation_codes_ibfk_1` FOREIGN KEY (`user`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `assigned_course_data`
+--
+ALTER TABLE `assigned_course_data`
+  ADD CONSTRAINT `assigned_course_data_ibfk_1` FOREIGN KEY (`assigned_course`) REFERENCES `assigned_courses` (`assign_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `assigned_courses`
 --
 ALTER TABLE `assigned_courses`
   ADD CONSTRAINT `assigned_courses_ibfk_1` FOREIGN KEY (`course`) REFERENCES `courses` (`lesson_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `assigned_courses_ibfk_2` FOREIGN KEY (`teacher`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `assigned_courses_ibfk_2` FOREIGN KEY (`teacher`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `assigned_courses_ibfk_3` FOREIGN KEY (`semester`) REFERENCES `semesters` (`semester_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `attendance`
 --
 ALTER TABLE `attendance`
-  ADD CONSTRAINT `attendance_ibfk_1` FOREIGN KEY (`att_id`) REFERENCES `weekly_programs` (`prog_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `attendance_ibfk_2` FOREIGN KEY (`student_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `attendance_ibfk_2` FOREIGN KEY (`student_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `attendance_ibfk_3` FOREIGN KEY (`assigned_course_data`) REFERENCES `assigned_course_data` (`acd_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `courses`
@@ -704,17 +977,24 @@ ALTER TABLE `enrolments`
   ADD CONSTRAINT `enrolments_ibfk_3` FOREIGN KEY (`assigned_course`) REFERENCES `assigned_courses` (`assign_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `exam_results`
+--
+ALTER TABLE `exam_results`
+  ADD CONSTRAINT `exam_results_ibfk_2` FOREIGN KEY (`student`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `exam_results_ibfk_3` FOREIGN KEY (`exam`) REFERENCES `exams` (`exam_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `exams`
 --
 ALTER TABLE `exams`
   ADD CONSTRAINT `exams_ibfk_1` FOREIGN KEY (`assigned_course`) REFERENCES `assigned_courses` (`assign_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `exam_results`
+-- Constraints for table `messages`
 --
-ALTER TABLE `exam_results`
-  ADD CONSTRAINT `exam_results_ibfk_2` FOREIGN KEY (`student`) REFERENCES `users` (`user_id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  ADD CONSTRAINT `exam_results_ibfk_3` FOREIGN KEY (`exam`) REFERENCES `exams` (`exam_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `messages`
+  ADD CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`sender`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`receiver`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `notices`
@@ -751,10 +1031,17 @@ ALTER TABLE `users`
   ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`user_auth`) REFERENCES `auths` (`auth_id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
+-- Constraints for table `weekly_program_data`
+--
+ALTER TABLE `weekly_program_data`
+  ADD CONSTRAINT `weekly_program_data_ibfk_1` FOREIGN KEY (`program`) REFERENCES `weekly_programs` (`prog_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `weekly_program_data_ibfk_2` FOREIGN KEY (`assigned_course_data`) REFERENCES `assigned_course_data` (`acd_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `weekly_programs`
 --
 ALTER TABLE `weekly_programs`
-  ADD CONSTRAINT `weekly_programs_ibfk_1` FOREIGN KEY (`lesson`) REFERENCES `courses` (`lesson_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `weekly_programs_ibfk_1` FOREIGN KEY (`teacher`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

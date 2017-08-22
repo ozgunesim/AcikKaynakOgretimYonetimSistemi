@@ -19,6 +19,7 @@
   <link href="<?=$base?>css/style.css" rel="stylesheet">
 
   <link href="<?=$base?>css/animate.css" rel="stylesheet">
+  <link href="<?=$base?>css/bootstrap-select.min.css" rel="stylesheet">
   
   <!-- jQuery -->
   <script src="<?=$base?>js/jquery.min.js"></script>
@@ -26,6 +27,7 @@
 
   <link rel="stylesheet" type="text/css" href="<?php echo $base; ?>css/zabuto_calendar.min.css" />
   <script src="<?php echo $base; ?>js/zabuto_calendar.min.js"></script>
+  <script src="<?php echo $base; ?>js/bootstrap-select.min.js"></script>
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

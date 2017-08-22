@@ -348,9 +348,56 @@ Class Teacher extends CI_Controller{
 
 	public function messages(){
 		$data =& $this->data;
-		
+		$flash = $this->session->flashdata('data');
+		if($flash != null){
+			$data = array_merge($data, $flash);
+			//exit(var_dump($flash));
+		}
+
+		$this->load->model('messages_model');
+		$data['msg_list'] = $this->messages_model->LoadLastMessagesList($this->session->userdata('user')->user_id);
+		$this->load->model('student_model');
+		$data['student_list'] = $this->student_model->GetAllStudents();
+
+		if($this->input->post('start_chat') != null || (isset($data['chat_target']) && $data['chat_target'] != null) ){
+			$sender = (!isset($data['chat_target'])) ? $this->input->post('start_chat') : $data['chat_target'];
+			$last100 = $this->messages_model->GetMesagesBySender($sender, $this->session->userdata('user')->user_id);
+			//exit(var_dump($last100));
+			$data['last100'] = $last100;
+			$data['chat_target'] = $sender;
+
+			if($this->input->post('start_chat') != null){
+				$this->session->set_flashdata('data', $data);
+				redirect('teacher/messages');
+			}
+			
+
+		}else if($this->input->post('message_content') != null){
+			$content = $this->input->post('message_content');
+			$target = $this->input->post('msg-target');
+			$sender = $this->session->userdata('user')->user_id;
+
+			$result = $this->messages_model->SendMessage($sender, $target, $content);
+			if($result === false)
+				set_error_msg('Beklenmeyen hata!');
+
+			$sender = $target;
+			$last100 = $this->messages_model->GetMesagesBySender($sender, $this->session->userdata('user')->user_id);
+			//exit(var_dump($last100));
+			$data['last100'] = $last100;
+			$data['chat_target'] = $sender;
+
+			$this->session->set_flashdata('data', $data);
+			redirect('teacher/messages');
+
+		}
 		$this->load->view('teacher/messages', $data);
 	}
+
+	public function grades(){
+		
+	}
+
 
 
 }

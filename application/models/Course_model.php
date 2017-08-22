@@ -64,9 +64,7 @@ Class Course_model extends CI_Model{
 				'practice_hours' => $newCourse['practice'],
 				'theoric_hours' => $newCourse['theoric'],
 				'akts' => $newCourse['akts'],
-				'department'  => $dept,
-				'weeks' => $newCourse['weeks'],
-				'start_date' => $newCourse['start_date']
+				'department'  => $dept
 			);
 			//exit(var_dump($insertArray));
 			$result = $this->db->insert('courses', $insertArray);

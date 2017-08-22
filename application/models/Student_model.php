@@ -38,6 +38,15 @@ Class Student_model extends CI_Model{
 		
 	}
 
+	public function GetAllStudents(){
+		$query = $this->db->select('*')
+		->from('users')
+		->where('user_auth', '3')
+		->get();
+
+		return ($query->num_rows() > 0) ? $query->result() : null;
+	}
+
 	public function SearchStudent($params = array(), $page=-1){
 		if(!empty($params) && $page != -1){
 
@@ -52,9 +61,12 @@ Class Student_model extends CI_Model{
 			->from('users')
 			->join('student_info', 'users.user_id = student_info.s_user_id', 'inner')
 			->join('auths', 'users.user_auth = auths.auth_id', 'inner')
-			->join('departments', 'departments.department_id = student_info.department', 'inner')
-			->join('enrolments', 'enrolments.student = users.user_id')
-			->where('users.user_auth','3');
+			->join('departments', 'departments.department_id = student_info.department', 'inner');
+
+			if(isset($params['enrol_id']))
+				$this->db->join('enrolments', 'enrolments.student = users.user_id');
+
+			$this->db->where('users.user_auth','3');
 
 			if(isset($params['name'])){
 				$this->db->like('users.user_name', $params['name']);
@@ -76,6 +88,7 @@ Class Student_model extends CI_Model{
 				$this->db->where('enrolments.enrol_id', $params['enrol_id']);
 			}
 
+			//exit(var_dump($this->db->get()));
 			$db2 = clone $this->db;
 			$result['all_count'] = $db2->get()->num_rows();
 			$result['limited'] = $this->db->limit($limit, ($page-1) * $limit)->get()->result();
