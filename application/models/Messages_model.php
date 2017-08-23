@@ -38,11 +38,20 @@ Class Messages_model extends CI_Model{
 			//->where('messages.receiver', $receiver_id)
 			$where = "(messages.sender='" . $this->db->escape_str($sender_id) ."' AND messages.receiver='" . $this->db->escape_str($receiver_id) . "') OR (messages.sender='" . $this->db->escape_str($receiver_id) ."' AND messages.receiver='" . $this->db->escape_str($sender_id) . "')";
 			$query = $this->db->where($where)
-			->order_by('messages.message_id','asc')
+			->order_by('messages.timestamp','asc')
 			->limit(100, 0)
 			->get();
+			$result = null;
+			if($query->num_rows() > 0){
+				$result = $query->result();
+				$updateArray = array(
+					'state' => '0'
+				);
+				$this->db->where($where);
+				$this->db->update('messages', $updateArray);
+			}
 			//exit(var_dump($query));
-			return ($query->num_rows() > 0) ? $query->result() : null;
+			return $result;
 		
 		}else{
 			return _EMPTY;
@@ -60,6 +69,23 @@ Class Messages_model extends CI_Model{
 			);
 			$this->db->insert('messages', $insertArray);
 			return ($this->db->affected_rows() > 0);
+		}else{
+			return _EMPTY;
+		}
+	}
+
+	public function GetUnreadedMsgCount($user_id = -1){
+		if($user_id != -1){
+			$query = $this->db->select('count(*) as total')
+			->from('messages')
+			->where('receiver', $user_id)
+			->where('state','1')
+			->group_by('sender')
+			->get();
+			if($query->num_rows() > 0)
+				return $query->row()->total;
+			else
+				return 0;
 		}else{
 			return _EMPTY;
 		}

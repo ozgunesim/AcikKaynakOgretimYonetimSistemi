@@ -408,6 +408,46 @@ Class Teacher_model extends CI_Model{
 
 	}
 
+	public function GetAttendanceList($assigned_course = -1, $user_id = -1){
+		if($assigned_course != -1 && $user_id != -1){
+			$query = $this->db->select('*, avg(state) as att_percent, count(*) as total_att, sum(state) as total_state, type as t_p')
+			->from('attendance')
+			->join('assigned_course_data','assigned_course_data.acd_id = attendance.assigned_course_data','inner')
+			->join('assigned_courses','assigned_courses.assign_id = assigned_course_data.assigned_course','inner')
+			->join('users','attendance.student_id = users.user_id','inner')
+			->join('student_info','student_info.s_user_id = users.user_id','inner')
+			->where('assigned_courses.assign_id', $assigned_course)
+			->where('assigned_courses.teacher', $user_id)
+			->group_by('user_id, type')
+			->get();
+
+			//exit(var_dump($query));
+			return ($query->num_rows() > 0) ? $query->result() : null;
+		}else{
+			return _EMPTY;
+		}
+	}
+
+	public function GetUserAttendance($user_id = -1){
+		if($user_id != -1){
+			$query = $this->db->select('*')
+			->from('attendance')
+			->join('assigned_course_data','assigned_course_data.acd_id = attendance.assigned_course_data','inner')
+			->join('assigned_courses','assigned_courses.assign_id = assigned_course_data.assigned_course','inner')
+			->join('users','attendance.student_id = users.user_id','inner')
+			->join('student_info','student_info.s_user_id = users.user_id','inner')
+			->where('attendance.student_id', $user_id)
+			->order_by('att_id','asc')
+			->get();
+
+			//exit(var_dump($query));
+			return ($query->num_rows() > 0) ? $query->result() : null;
+
+		}else{
+			return _EMPTY;
+		}
+	}
+
 	public function GetExams($assign_id = -1){
 		if($assign_id != -1){
 			$query = $this->db->select('*')

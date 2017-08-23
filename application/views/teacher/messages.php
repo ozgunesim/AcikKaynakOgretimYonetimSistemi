@@ -36,8 +36,9 @@ $this->load->view('messages');
 			//exit(var_dump($msg_list));
 			foreach ($msg_list as $msg) {
 				$_text = ((string)$msg->sender !== (string)$this->session->userdata('user')->user_id) ? $msg->sender_username : $msg->receiver_username;
+				$_id = ((string)$msg->sender !== (string)$this->session->userdata('user')->user_id) ? $msg->sender : $msg->receiver;
 			?>
-			<button class="list-group-item msg-list-item" type="submit" name="start_chat" value="<?=$msg->sender;?>">
+			<button class="list-group-item msg-list-item" type="submit" name="start_chat" value="<?=$_id;?>">
 				<strong class="/*<?=($msg->has_msg == '1') ? 'text-success' : '';?>*/"><?=$_text;?></strong>
 				<!--small><?=substr($msg->message_content, 0 , 15).'...';?></small-->
 			</button>
@@ -82,7 +83,7 @@ $this->load->view('messages');
 			<h3 class="text-center">
 			<?php
 			if(isset($last100)){
-				echo $last100[0]->sender_username;
+				echo ($last100[0]->sender != $this->session->userdata('user')->user_id) ? $last100[0]->sender_username : $last100[0]->receiver_username;
 			}
 			?>
 			</h3>
@@ -91,7 +92,7 @@ $this->load->view('messages');
 		<div class="messages-sendbox" style="padding: 5px;">
 			<form action="" method="post" style="height: 100%;" id="msg-form">
 				<input type="hidden" name="msg-target" value="<?=(isset($chat_target)) ? $chat_target : '';?>" id="target-holder" >
-				<textarea class="form-control" id="message-textarea" name="message_content" placeholder="mesajınızı girin ve enter tuşuna basın." style="height: 100%; resize:none;" ></textarea>
+				<textarea class="form-control" id="message-textarea" name="message_content" autofocus placeholder="mesajınızı girin ve enter tuşuna basın." style="height: 100%; resize:none;" ></textarea>
 			</form>
 		</div>
 		<div class="messages-tooltip">

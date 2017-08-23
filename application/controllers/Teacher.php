@@ -13,9 +13,10 @@ Class Teacher extends CI_Controller{
 			exit('Yetkiniz Yok!');
 		}
 		$this->teacher_id = $this->session->userdata('user')->user_id;
+		$this->load->model('messages_model');
 		$this->load->model('teacher_model');
 		//$data = array();
-		$this->data['msg_count'] = $this->teacher_model->WaitingMsgCount($this->teacher_id);
+		$this->data['msg_count'] = $this->messages_model->GetUnreadedMsgCount($this->teacher_id);
 	}
 
 	public function home($page = 1){
@@ -259,6 +260,41 @@ Class Teacher extends CI_Controller{
 
 
 		$this->load->view('teacher/attendance', $data);
+	}
+
+	public function attendance_state(){
+		$data =& $this->data;
+		$this->load->model('course_model');
+		$semester = $this->course_model->GetCurrentSemester();
+		if($semester != null){
+			$data['assigned_courses'] = $this->teacher_model->GetAssignedCourses(
+				$this->session->userdata('user')->user_id,
+				$semester->semester_id,
+				true //gruplama icin parametre
+			);
+			if($this->input->post('selected_course') != null){
+				$assigned_course = $this->input->post('selected_course');
+				$att_result = $this->teacher_model->GetAttendanceList(
+					$assigned_course,
+					$this->session->userdata('user')->user_id
+				);
+				if($att_result != null)
+					$data['att_result'] = $att_result;
+				else
+					set_error_msg('Bu şubeye ait yoklama bulunamadı.');
+			}else if($this->input->post('inspect_att') != null){
+				$student_id = $this->input->post('inspect_att');
+				$user_att = $this->teacher_model->GetUserAttendance($student_id);
+				if($user_att !== null){
+					$data['user_att'] = $user_att;
+				}else{
+					set_error_msg('Yoklama getirilirken beklenmeyen hata!');
+				}
+			}
+		}else{
+			set_error_msg('Henüz aktif bir dönemde değilsiniz!');
+		}
+		$this->load->view('teacher/attendance_state', $data);
 	}
 
 	public function add_exam($param = 0){

@@ -10,8 +10,8 @@
 <ul class="sub-menu collapse" id="courses">
   <a href="<?php echo site_url() . 'teacher/weekly_programs'?>"><li>Ders Programı Belirle</li></a>
   <a href="<?php echo site_url() . 'teacher/attendance'?>"><li>Yoklama Gir</li></a>
+  <a href="<?php echo site_url() . 'teacher/attendance_state'?>"><li>Yoklama Durumu</li></a>
   <a href="<?php echo site_url() . 'teacher/add_exam'?>"><li>Sınav Sonucu Gir/Düzenle</li></a>
-  <a href="<?php echo site_url() . 'admin/add_course'?>"><li>Başarı Durumu</li></a>
 </ul>
 
 <!--li data-toggle="collapse" data-target="#student" class="collapsed">

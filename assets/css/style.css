@@ -660,7 +660,7 @@ div.zabuto_calendar .table tr td div.day:hover {
   margin: 20px;
   display: inline-block;
   position: relative;
-  width: 200px;
+  max-width: 80%;
   height: auto;
   background-color: #ddd;
 }
