@@ -428,16 +428,18 @@ Class Teacher_model extends CI_Model{
 		}
 	}
 
-	public function GetUserAttendance($user_id = -1){
-		if($user_id != -1){
+	public function GetUserAttendance($user_id = -1, $assign_id = -1){
+		if($user_id != -1 && $assign_id != -1){
 			$query = $this->db->select('*')
 			->from('attendance')
 			->join('assigned_course_data','assigned_course_data.acd_id = attendance.assigned_course_data','inner')
 			->join('assigned_courses','assigned_courses.assign_id = assigned_course_data.assigned_course','inner')
 			->join('users','attendance.student_id = users.user_id','inner')
 			->join('student_info','student_info.s_user_id = users.user_id','inner')
+			->join('courses', 'courses.lesson_id = assigned_courses.course','inner')
 			->where('attendance.student_id', $user_id)
-			->order_by('att_id','asc')
+			->where('assigned_courses.assign_id', $assign_id)
+			->order_by('date asc, hour asc')
 			->get();
 
 			//exit(var_dump($query));

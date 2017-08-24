@@ -272,19 +272,23 @@ Class Teacher extends CI_Controller{
 				$semester->semester_id,
 				true //gruplama icin parametre
 			);
-			if($this->input->post('selected_course') != null){
+			if($this->input->post('selected_course') != null && $this->input->post('inspect_att') == null){
 				$assigned_course = $this->input->post('selected_course');
 				$att_result = $this->teacher_model->GetAttendanceList(
 					$assigned_course,
 					$this->session->userdata('user')->user_id
 				);
-				if($att_result != null)
+				if($att_result != null){
 					$data['att_result'] = $att_result;
-				else
+					$data['selected_course'] = $assigned_course;
+				}
+				else{
 					set_error_msg('Bu şubeye ait yoklama bulunamadı.');
+				}
 			}else if($this->input->post('inspect_att') != null){
 				$student_id = $this->input->post('inspect_att');
-				$user_att = $this->teacher_model->GetUserAttendance($student_id);
+				$selected_course = $this->input->post('selected_course');
+				$user_att = $this->teacher_model->GetUserAttendance($student_id, $selected_course);
 				if($user_att !== null){
 					$data['user_att'] = $user_att;
 				}else{

@@ -6,6 +6,7 @@
 
 <!-- Bootstrap Core JavaScript -->
 <script src="<?=$base?>js/bootstrap.min.js"></script>
+<script src="<?=$base?>js/common.js"></script>
 <script>
 	$(document).ready(function(){
 		$('.toggle-menu').click(function(){

@@ -39,6 +39,12 @@
 
 	<div class="row" id="select-course-row">
 		<div class="col-md-12">
+
+			<button class="btn btn-warning toggle-menu-btn"></button>
+			<hr>
+
+
+
 			<h3>Yoklama listesi için dersi seçin:</h3>
 			<form action="" method="post">
 				<select name="selected_course" class="form-control">
@@ -68,6 +74,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			<form action="" method="post" target="start_inspect" id="att_table_form">
+				<input type="hidden" name="selected_course" value="<?=$selected_course;?>">
 				<table class="table table-striped table-hover table-condensed">
 					<tr>
 					<th>Numara</th>
@@ -96,11 +103,11 @@
 
 					echo printCell($row->total_att);
 					echo printCell(($row->total_att - $row->total_state));
-					echo printCell('%' . (100 * $row->att_percent));
+					echo printCell('%' . ceil((100 * $row->att_percent)),2);
 
 					echo printCell($nextRow->total_att);
 					echo printCell(($nextRow->total_att - $nextRow->total_state));
-					echo printCell('%' . (100 * $nextRow->att_percent));
+					echo printCell('%' . ceil((100 * $nextRow->att_percent)),2);
 
 					//0.7 teorik ders minimum devam zorunlulugu
 					//0.8 pratik ders minimum devam zorunlulugu
@@ -126,16 +133,39 @@
 
 	<?php
 	if(isset($user_att)){
-		var_dump($user_att);
+		//var_dump($user_att);
 	?>
+	<div class="row">
+		<div class="col-xs-6">
+			<h4><strong class="text-info">Öğrenci:</strong> <?=$user_att[0]->user_name;?></h4>
+		</div>
+		<div class="col-xs-6">
+			<h4><strong class="text-info">Numara:</strong> <?=$user_att[0]->number;?></h4>
+		</div>
+	</div><hr>
+
 	<table class="table table-striped table-hover table-condensed">
 	<tr>
-	<th>Gün</th>
+		<th>Tarih</th><th>Saat</th><th>Ders Adı</th><th>T-P</th><th>Yoklama Durumu</th>
 	</tr>
+	<?php
+	$tpArray = array(1 => '(T)', 2 => '(P)');
+	foreach ($user_att as $att) {
+		echo '<tr>';
+		echo printCell(date('d.m.Y', strtotime($att->date)));
+		echo printCell(date('H:i' , strtotime($att->hour)));
+		echo printCell($att->lesson_name);
+		echo printCell($tpArray[$att->type]);
+		if((string)$att->state === '1'){
+			echo printCell('<span class="text-success"><i class="fa fa-check"></i></span>');
+		}else{
+			echo printCell('<span class="text-danger"><i class="fa fa-times"></i></span>');
+		}
+		echo '</tr>';
+	}
+	?>
 	</table>
-
-
-
+	<button type="button" class="btn btn-primary btn-block" id="close-window" data-dismiss="modal">KAPAT</button>
 
 	<script>
 		$('.left-side').hide();

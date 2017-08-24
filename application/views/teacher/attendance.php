@@ -40,10 +40,7 @@
 		?>
 		
 		<div class="row wp-toggle-menu-row">
-			<button id="wp-toggle-menu" class="btn btn-warning">
-				<span class="hide-span"><i class="fa fa-angle-left" aria-hidden="true"></i> Yan menüyü gizle</span>
-				<span class="show-span hidden"><i class="fa fa-angle-right" aria-hidden="true"></i> Yan menüyü göster</span>
-			</button>
+			<button class="btn btn-warning toggle-menu-btn"></button>
 			<hr>
 		</div>
 
