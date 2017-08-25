@@ -1,4 +1,4 @@
-Bu proje akademik amaçlar da dahil olmak üzere hiçbir þekilde sahibinden izinsiz kullanýlamaz.
+Bu proje akademik amaçlar hariç olmak üzere hiçbir þekilde sahibinden izinsiz kullanýlamaz.
 Kaynak kodlarý deðiþtirilemez veya daðýtýlamaz.
 Ticari ve ticari olmayan herhangi bir projede kaynak kodlarý ve proje dosyalarý kullanýlamaz.
 Projenin tüm haklarý Özgün EÞÝM'e aittir.

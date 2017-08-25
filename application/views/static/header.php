@@ -70,7 +70,7 @@
       </div>
 
 
-  <footer class="hidden-sm hidden-xs legal-notice"><div class="text-center"><small style="color: #fff;font-size: 9px;">Copyright <?php echo date('Y'); ?> ©<br>Bu proje akademik amaçlar da dahil olmak üzere hiçbir şekilde izinsiz kullanılamaz. Bu siteyi görüntüleyen herkes lisans sözleşmesini kabul etmiş sayılır. <a href="<?php echo base_url(); ?>license.txt">Lisans Sözleşmesi</a><br>İletişim: <a href="mailto:ozgunesim@gmail.com">ozgunesim@gmail.com</a><br>Özgün EŞİM tarafından geliştirilmiştir.</small></div></footer>
+  <footer class="hidden-sm hidden-xs legal-notice"><div class="text-center"><small style="color: #fff;font-size: 9px;">Copyright <?php echo date('Y'); ?> ©<br>Bu proje akademik amaçlar hariç olmak üzere hiçbir şekilde izinsiz kullanılamaz. Bu siteyi görüntüleyen herkes lisans sözleşmesini kabul etmiş sayılır. <a href="<?php echo base_url(); ?>license.txt">Lisans Sözleşmesi</a><br>İletişim: <a href="mailto:ozgunesim@gmail.com">ozgunesim@gmail.com</a><br>Özgün EŞİM tarafından geliştirilmiştir.</small></div></footer>
 
 
 
