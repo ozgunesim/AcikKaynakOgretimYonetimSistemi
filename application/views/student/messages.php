@@ -101,6 +101,20 @@ $this->load->view('messages');
 	</div>
 </div>
 
+<?php $this->load->view('static/footer');
+
+$base = base_url() ."assets/" ?>
+<link href="<?=$base?>css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="<?=$base?>js/bootstrap-toggle.min.js"></script>
+<?php
+if(!isset($last100)){
+?>
+<script>
+$('.messages-tooltip').css('display','table-cell');
+</script>
+<?php
+}
+?>
 
 <div class="modal fade" tabindex="-1" role="dialog">
 	<div class="modal-dialog modal-lg" role="document">
@@ -119,22 +133,6 @@ $this->load->view('messages');
 		</div><!-- /.modal-content -->
 	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
-
-<?php $this->load->view('static/footer');
-
-$base = base_url() ."assets/" ?>
-<link href="<?=$base?>css/bootstrap-toggle.min.css" rel="stylesheet">
-<script src="<?=$base?>js/bootstrap-toggle.min.js"></script>
-<?php
-if(!isset($last100)){
-?>
-<script>
-$('.messages-tooltip').css('display','table-cell');
-</script>
-<?php
-}
-?>
 
 
 

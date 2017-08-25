@@ -78,6 +78,10 @@ Class Teacher_model extends CI_Model{
 				$this->db->like('teacher_info.department', $dept->department_id);
 			}
 
+			if(isset($params['isActive'])){
+				$this->db->where('users.isActive', $params['isActive']);
+			}
+
 			$db2 = clone $this->db;
 			$result['all_count'] = $db2->get()->num_rows();
 			$result['limited'] = $this->db->limit($limit, ($page-1) * $limit)->get()->result();
@@ -242,6 +246,28 @@ Class Teacher_model extends CI_Model{
 
 		$result = $query->get();
 		return $result->result();
+	}
+
+		public function GetAllAssignedCourses($group_by = false){
+		$this->db->select('*')
+		->from('assigned_courses')
+		->join('assigned_course_data', 'assigned_courses.assign_id = assigned_course_data.assigned_course', 'inner')
+		->join('users', 'assigned_courses.teacher = users.user_id', 'inner')
+		->join('teacher_info', 'users.user_id = teacher_info.t_user_id', 'inner')
+		->join('auths', 'users.user_auth = auths.auth_id', 'inner')
+		//->join('departments', 'departments.department_id = teacher_info.department', 'inner')
+		->join('honours', 'honours.honour_id = teacher_info.honour', 'inner')
+		->join('courses', 'assigned_courses.course = courses.lesson_id', 'inner')
+		->join('departments', 'courses.department = departments.department_id', 'inner')
+		->order_by('course', 'asc');
+
+		if($group_by === true){
+			$this->db->group_by(array('assigned_courses.course', 'assigned_courses.subclass'));
+		}
+
+		$query = $this->db->get();
+
+		return ($query->num_rows() > 0) ? $query->result() : null;
 	}
 
 

@@ -147,6 +147,28 @@ Class Student_model extends CI_Model{
 		}
 	}
 
+	public function GetEnrolmentsByUserID($user_id = -1){
+		if($user_id != -1){
+			$query = $this->db->select('*')
+			->from('enrolments')
+			->join('assigned_courses', 'enrolments.assigned_course = assigned_courses.assign_id', 'inner')
+			//->join('assigned_course_data', 'assigned_courses.assign_id = assigned_course_data.assigned_course', 'inner')
+			->join('users', 'users.user_id = enrolments.student', 'inner')
+			->join('courses', 'courses.lesson_id = assigned_courses.course', 'inner')
+			->join('student_info', 'student_info.s_user_id = users.user_id', 'inner')
+			->join('departments', 'departments.department_id = courses.department','inner')
+			->where('enrolments.student', $user_id)
+			//->where('assigned_courses.subclass', $subclass)
+			->get();
+
+			//exit(var_dump($query));
+
+			return ($query->num_rows() > 0) ? $query->result() : null;
+		}else{
+			return _EMPTY;
+		}
+	}
+
 
 	public function GetEnrolmentsByAssignedCourseData($acd_id = -1){
 		if($acd_id != -1){
@@ -159,6 +181,45 @@ Class Student_model extends CI_Model{
 			->join('student_info', 'student_info.s_user_id = users.user_id', 'inner')
 			->join('departments', 'departments.department_id = student_info.department','inner')
 			->where('assigned_course_data.acd_id', $acd_id)
+			->get();
+
+			return ($query->num_rows() > 0) ? $query->result() : null;
+		}else{
+			return _EMPTY;
+		}
+	}
+
+	public function EnrolStudent($assigned_course = -1, $course_id = -1, $user_id = -1){
+		if($assigned_course != -1 && $course_id != -1 && $user_id != -1){
+			$exist = $this->db->select('count(*) as total')
+			->from('enrolments')
+			->join('assigned_courses','enrolments.assigned_course = assigned_courses.assign_id','inner')
+			->where('student', $user_id)
+			->where('enrolments.course', $course_id)
+			->get()->row()->total;
+
+			if((int)$exist === 0){
+				$insertArray = array(
+					'student' => $user_id,
+					'assigned_course' => $assigned_course,
+					'course' => $course_id
+				);
+				$this->db->insert('enrolments', $insertArray);
+				return ($this->db->affected_rows() > 0);
+			}else{
+				return "Bu derse zaten kayıt olunmuş.";
+			}
+		}
+	}
+
+	public function GetWeeklyProgramByAssignedCourse($assigned_course = -1){
+		if($assigned_course != -1){
+			$query = $this->db->select('*')
+			->from('assigned_courses')
+			->join('assigned_course_data','assigned_course_data.assigned_course = assigned_courses.assign_id','inner')
+			->join('weekly_program_data','weekly_program_data.assigned_course_data = assigned_course_data.acd_id','inner')
+			->join('courses','courses.lesson_id = assigned_courses.course','inner')
+			->where('assigned_courses.assign_id', $assigned_course)
 			->get();
 
 			return ($query->num_rows() > 0) ? $query->result() : null;

@@ -434,9 +434,47 @@ Class Teacher extends CI_Controller{
 		$this->load->view('teacher/messages', $data);
 	}
 
-	public function grades(){
-		
+	public function settings(){
+		$data =& $this->data;
+		if($this->input->post('user_name') != null){
+			if(xss_check()){
+				$this->load->model('user_model');
+				$result = $this->user_model->ChangeUserName(
+					strip_tags($this->input->post('user_name')),
+					$this->user_sess->user_id
+					);
+				if($result === true)
+					set_success_msg('Ad soyad başarıyla değiştirildi.');
+				else
+					set_error_msg('Beklenmeyen hata!');
+			}
+
+		}else if($this->input->post('user_email') != null){
+			if(xss_check()){
+				$email = $this->input->post('user_email');
+				if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+					$this->load->model('user_model');
+					$result = $this->user_model->ChangeEmail(
+						strip_tags($email),
+						$this->user_sess->user_id
+						);
+					if($result === true)
+						set_success_msg('Email başarıyla değiştirildi.');
+					else
+						set_error_msg('Beklenmeyen hata!');
+				}else{
+					set_error_msg('Geçersiz email!');
+				}
+
+			}
+
+		}
+
+
+		$this->load->view('teacher/settings', $data);
 	}
+
+
 
 
 

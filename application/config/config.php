@@ -576,8 +576,22 @@ $config['force_attendance_date'] = FALSE;
 
 
 /* CSRF ISTISNALARI */
-if (stripos($_SERVER["REQUEST_URI"],'/teacher/attendance') === FALSE && stripos($_SERVER["REQUEST_URI"],'/teacher/messages') === FALSE ) {
+$exceptList = array(
+	'/teacher/attendance',
+	'/teacher/messages',
+	'/student/messages'
+);
+
+$disable_csrf = FALSE;
+foreach ($exceptList as $exItem) {
+	if (stripos($_SERVER["REQUEST_URI"], $exItem) !== FALSE){
+		$disable_csrf = TRUE;
+		break;
+	}
+}
+
+if ($disable_csrf === FALSE) {
 	$config['csrf_protection'] 	= TRUE;
 }else{ 
-$config['csrf_protection'] 	= FALSE; 
+	$config['csrf_protection'] 	= FALSE; 
 }

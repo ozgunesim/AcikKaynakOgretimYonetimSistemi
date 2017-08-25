@@ -343,6 +343,79 @@ Class Admin extends CI_Controller{
 		$this->load->view('admin/delete_teacher', $data);
 	}
 
+	public function activate_teacher($page = 1){
+		$data = array();
+		$this->load->model('departments_model');
+		$data['departments'] = $this->departments_model->GetDepartments();
+
+		$this->load->model('honour_model');
+		$data['honours'] = $this->honour_model->GetHonours();
+
+		if($this->input->post('delete_id') != null){
+			$this->load->model('user_model');
+			$result = $this->user_model->BanUser($this->security->xss_clean($this->input->post('delete_id')));
+			if($result === true){
+				set_success_msg('Kullanıcı başarıyla sistemden kaldırıldı.');
+			}else{
+				set_error_msg('Beklenmeyen hata!');
+			}
+		}else if($this->input->post('activate_id') != null){
+			$this->load->model('user_model');
+			$result = $this->user_model->ActivateUser($this->security->xss_clean($this->input->post('activate_id')));
+			if($result === true){
+				set_success_msg('Kullanıcı başarıyla aktifleştirildi.');
+			}else{
+				set_error_msg('Beklenmeyen hata!');
+			}
+		}else{
+			$search = array();
+
+			$newSearch = true; //($this->input->post('search_btn') != null);
+			/*if($this->input->post('teacher_name') != null){
+				$search['name'] = trim($this->input->post('teacher_name'));
+				$data['name'] = $search['name'];
+			}
+			if($this->input->post('teacher_honour') != null){
+				$search['honour'] = trim($this->input->post('teacher_honour'));
+				$data['honour'] = $search['honour'];
+			}
+			if($this->input->post('teacher_dept') != null){
+				$search['dept'] = trim($this->input->post('teacher_dept'));
+				$data['dept'] = $search['dept'];
+			}
+			if($this->input->post('teacher_email') != null){
+				$search['email'] = trim($this->input->post('teacher_email'));
+				$data['email'] = $search['email'];
+			}*/
+
+			$search['isActive'] = '0';
+
+			if(get_cookie('last_teacher_search') != null && !$newSearch)
+				$search = json_decode(get_cookie('last_teacher_search'), true);
+			else if($newSearch === true)
+				$page = 1;
+
+			set_cookie('last_teacher_search', json_encode($search), '3600');
+
+			//exit(var_dump($search));
+
+			if(!empty($search)){
+				$this->load->model('teacher_model');
+				$result = $this->teacher_model->SearchTeacher($search, $page);
+				//exit("page:" . $page);
+				$data['search_result'] = $result['limited'];
+				$data['all_count'] = $result['all_count'];
+
+				$config['base_url'] = site_url() . '/admin/delete_teacher/';
+				$config['total_rows'] = $data['all_count'];
+				$this->load->library('defaultpagination');
+				$data['pagination'] = $this->defaultpagination->create_links($config);
+			}
+		}
+
+		$this->load->view('admin/activate_teacher', $data);
+	}
+
 	public function assign_course(){
 		$data = array();
 		$this->load->model('course_model');

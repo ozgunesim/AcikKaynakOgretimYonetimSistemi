@@ -20,6 +20,7 @@
   <a href="<?php echo site_url() . 'admin/assign_course'?>"><li>Öğretmene Ders/Şube Ata</li></a>
   <a href="<?php echo site_url() . 'admin/delete_assignment'?>"><li>Öğretmenden Şube Sil</li></a>
   <a href="<?php echo site_url() . 'admin/delete_teacher'?>"><li>Erişim Ayarları</li></a>
+  <a href="<?php echo site_url() . 'admin/activate_teacher'?>"><li>Öğretmen Kaydını Kabul Et</li></a>
 </ul>
 
 <li data-toggle="collapse" data-target="#student" class="collapsed">

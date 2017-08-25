@@ -57,6 +57,12 @@
 								<input type="hidden" name="<?php echo $this->security->get_csrf_token_name();?>" value="<?php echo $this->security->get_csrf_hash();?>" />
 								<!-- Change this to a button or input when using this as a form -->
 								<button href="index.html" class="btn btn-success btn-block">Giriş Yap</button>
+								
+								<button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#myModal">
+									Kayıt Ol
+								</button>
+
+
 							</fieldset>
 						</form>
 					</div>
@@ -64,6 +70,23 @@
 			</div>
 		</div>
 	</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Kayıt Şeklini Seçin:</h4>
+      </div>
+      <div class="modal-body">
+      	<a href="<?php echo site_url() . 'user/student_sign_up'?>" class="btn btn-block btn-default">Öğrenci Olarak</a>
+      	<a href="<?php echo site_url() . 'user/teacher_sign_up'?>" class="btn btn-block btn-default">Öğretmen Olarak</a>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 </body>

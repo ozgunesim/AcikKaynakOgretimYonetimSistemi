@@ -27,7 +27,7 @@ Class Messages_model extends CI_Model{
 		}
 	}
 
-	public function GetMesagesBySender($sender_id = -1, $receiver_id = -1){
+	public function GetMesagesBySender($sender_id = -1, $receiver_id = -1, $update_state = true){
 		if($sender_id != -1 && $receiver_id != -1){
 			$this->db
 			->select(' message_content, sender, receiver, message_id, timestamp, sender_user.user_name as sender_username, receiver_user.user_name as receiver_username')
@@ -42,7 +42,7 @@ Class Messages_model extends CI_Model{
 			->limit(100, 0)
 			->get();
 			$result = null;
-			if($query->num_rows() > 0){
+			if($query->num_rows() > 0 && $update_state === true){
 				$result = $query->result();
 				$updateArray = array(
 					'state' => '0'

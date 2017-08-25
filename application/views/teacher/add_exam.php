@@ -1,5 +1,5 @@
 <?php $this->load->view('static/header');?>
-<h2 class="page-title">Yoklama Gir</h2>
+<h2 class="page-title">Sınav Notlarını Duyur</h2>
 
 <script>
 
